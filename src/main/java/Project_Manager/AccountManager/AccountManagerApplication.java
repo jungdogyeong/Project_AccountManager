@@ -9,6 +9,7 @@ public class AccountManagerApplication {
 	public static void main(String[] args) {
         System.out.println("hello");
         SpringApplication.run(AccountManagerApplication.class, args);
+        System.out.println("hello");
 	}
 
 }
