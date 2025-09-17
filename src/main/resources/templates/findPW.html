@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>비밀번호 재설정</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 380px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 24px 20px 30px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .title h1 {
+            font-size: 22px;
+            font-weight: 600;
+            margin: 0;
+            color: #333;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .input-row input {
+            flex: 1;
+            padding: 12px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-row button {
+            padding: 12px 16px;
+            background: #5563DE;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .input-box {
+            margin-bottom: 14px;
+        }
+
+        .input-box input {
+            width: 90%;
+            padding: 12px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-box input:focus {
+            border-color: #5563DE;
+            box-shadow: 0 0 4px rgba(85,99,222,0.3);
+        }
+
+        .confirm-btn {
+            width: 90%;
+            padding: 13px;
+            font-size: 16px;
+            background: #5563DE;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 6px;
+            transition: background 0.2s;
+        }
+
+        .confirm-btn:hover {
+            background: #3f4db7;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="title">
+        <h1>비밀번호 재설정</h1>
+    </div>
+
+    <!-- 이메일 + 인증번호 발송 -->
+    <div class="input-row">
+        <label for="email"></label><input type="email" id="email" placeholder="E-mail 입력" required>
+        <button type="button" onclick="sendCode()">인증번호 발송</button>
+    </div>
+
+    <!-- 인증번호 입력 -->
+    <div class="input-row">
+        <label for="code"></label><input type="text" id="code" placeholder="인증번호 입력" required>
+        <button type="button" onclick="checkCode()">확인</button>
+    </div>
+
+    <!-- 신규 비밀번호 입력 -->
+    <div class="input-box">
+        <label for="newPassword"></label><input type="password" id="newPassword" placeholder="신규 비밀번호 입력" required>
+    </div>
+
+    <!-- 비밀번호 재입력 -->
+    <div class="input-box">
+        <label for="confirmPassword"></label><input type="password" id="confirmPassword" placeholder="비밀번호 재입력" required>
+    </div>
+
+    <!-- 비밀번호 재설정 버튼 -->
+    <button class="confirm-btn" onclick="resetPassword()">비밀번호 재설정</button>
+</div>
+
+<script>
+    function sendCode() {
+        const email = document.getElementById("email").value;
+        if (!email) {
+            alert("이메일을 입력해주세요.");
+            return;
+        }
+        alert("인증번호가 발송되었습니다: " + email);
+    }
+
+    function checkCode() {
+        const code = document.getElementById("code").value;
+        if (!code) {
+            alert("인증번호를 입력해주세요.");
+            return;
+        }
+        alert("인증 성공!");
+    }
+
+    function resetPassword() {
+        const pw1 = document.getElementById("newPassword").value;
+        const pw2 = document.getElementById("confirmPassword").value;
+
+        if (!pw1 || !pw2) {
+            alert("비밀번호를 모두 입력해주세요.");
+            return;
+        }
+        if (pw1 !== pw2) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return;
+        }
+        alert("비밀번호가 재설정되었습니다.");
+    }
+</script>
+</body>
+</html>
