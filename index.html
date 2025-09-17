@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>로그인 창</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 360px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 28px 20px 34px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .title h1 {
+            font-size: 26px;
+            font-weight: 600; /* 영어 굵게 */
+            margin: 0;
+            color: #333;
+            line-height: 1.4;
+        }
+
+        .input-box {
+            margin-bottom: 14px;
+        }
+
+        .input-box input {
+            width: 90%;
+            padding: 14px 12px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-box input:focus {
+            border-color: #5563DE;
+            box-shadow: 0 0 6px rgba(85,99,222,0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            background: #5563DE;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 4px;
+            transition: background 0.2s;
+        }
+
+        .login-btn:hover {
+            background: #3f4db7;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        .links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #5563DE;
+            font-weight: 500;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <div class="title">
+        <h1>Account<br>Manager</h1>
+    </div>
+    <form onsubmit="return handleLogin(event)">
+        <div class="input-box">
+            <label for="email"></label><input type="email" id="email" placeholder="E-mail" required>
+        </div>
+        <div class="input-box">
+            <label for="password"></label><input type="password" id="password" placeholder="비밀번호" required>
+        </div>
+        <button type="submit" class="login-btn">로그인</button>
+    </form>
+    <div class="links">
+        <a href="/login/findPW">비밀번호 찾기</a> /
+        <a href="/login/join">회원가입</a>
+    </div>
+</div>
+
+<script>
+    function handleLogin(e) {
+        e.preventDefault();
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        if (email && password) {
+            alert("로그인 시도: " + email);
+            // 여기서 실제 서버와 연동 가능
+        } else {
+            alert("이메일과 비밀번호를 입력해주세요.");
+        }
+    }
+</script>
+</body>
+</html>
