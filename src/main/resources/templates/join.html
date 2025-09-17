@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #74ABE2, #5563DE);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 380px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 28px 20px 34px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            color: #333;
+        }
+
+        .input-box {
+            margin-bottom: 14px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .input-box input {
+            flex: 1;
+            padding: 12px 14px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        .input-box input:focus {
+            border-color: #5563DE;
+            box-shadow: 0 0 2px rgba(85,99,222,0.3);
+        }
+
+        .btn {
+            padding: 12px;
+            font-size: 14px;
+            background: #5563DE;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn:hover {
+            background: #3f4db7;
+        }
+
+        .full-width input {
+            width: 100%;
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            background: #34a853;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        .signup-btn:hover {
+            background: #28873f;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="title">
+        <h1>회원가입</h1>
+    </div>
+    <form onsubmit="return handleJoin(event)">
+        <!-- 이메일 + 인증번호 -->
+        <div class="input-box">
+            <label for="email"></label><input type="email" id="email" placeholder="E-mail" required>
+            <button type="button" class="btn" onclick="sendCode()">인증번호</button>
+        </div>
+
+        <!-- 인증번호 입력 -->
+        <div class="input-box">
+            <label for="verifyCode"></label><input type="text" id="verifyCode" placeholder="인증번호 입력" required>
+            <button type="button" class="btn" onclick="checkCode()">확인</button>
+        </div>
+
+        <!-- 비밀번호 입력 -->
+        <div class="input-box full-width">
+            <label for="password"></label><input type="password" id="password" placeholder="비밀번호 입력" required>
+        </div>
+
+        <!-- 비밀번호 재입력 -->
+        <div class="input-box full-width">
+            <label for="confirmPassword"></label><input type="password" id="confirmPassword" placeholder="비밀번호 재입력" required>
+        </div>
+
+        <!-- 회원가입 버튼 -->
+        <button type="submit" class="signup-btn">회원가입</button>
+    </form>
+</div>
+
+<script>
+    function sendCode() {
+        const email = document.getElementById("email").value;
+        if (email) {
+            alert("인증번호가 " + email + "로 발송되었습니다.");
+        } else {
+            alert("이메일을 입력해주세요.");
+        }
+    }
+
+    function checkCode() {
+        const code = document.getElementById("verifyCode").value;
+        if (code === "1234") { // 예시: 실제로는 서버 검증 필요
+            alert("인증 성공!");
+        } else {
+            alert("인증번호를 확인해주세요.");
+        }
+    }
+
+    function handleJoin(e) {
+        e.preventDefault();
+        const pw = document.getElementById("password").value;
+        const confirmPw = document.getElementById("confirmPassword").value;
+
+        if (pw !== confirmPw) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return false;
+        }
+        alert("회원가입 성공!");
+        window.location.href = "login.html"; // 회원가입 후 로그인 페이지로 이동
+    }
+</script>
+</body>
+</html>
