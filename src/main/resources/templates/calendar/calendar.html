@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>모바일 캘린더</title>
     <style>
         :root{
@@ -26,24 +26,39 @@
 
         /* 상단 헤더 */
         .header{
-          display:flex;
-          align-items:center;
-          justify-content:space-between;
-          margin-bottom:8px;
-        }
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:8px;
+  position:relative; /* month-nav를 중앙 고정하기 위해 추가 */
+}
         .menu-icon{
           width:8vw; height:8vw; border:2px solid #222; border-radius:4px;
           display:flex; align-items:center; justify-content:center;
           font-weight:700; font-size:5vw;
         }
-        .month-nav{
-          display:flex; align-items:center; gap:6px;
-          font-size:5vw; font-weight:700;
-        }
+
         .month-nav button{
-          border:2px solid #222; background:white; padding:2px 6px;
-          border-radius:6px; cursor:pointer; font-size:5vw; font-weight:700;
-        }
+  border:2px solid #222;
+  background:white;
+  padding:2px 6px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:5vw;
+  font-weight:700;
+}
+
+        .month-nav{
+  display:flex;              /* 버튼, 월 텍스트 가로 배치 */
+  align-items:center;
+  gap:6px;
+  font-size:5vw;
+  font-weight:700;
+  position:absolute;          /* header 기준 중앙 */
+  left:50%;
+  transform:translateX(-50%);
+}
+
         .totals{
           text-align:right; font-size:3.5vw; line-height:1.4;
         }
@@ -65,30 +80,43 @@
 
         /* 달력 그리드 */
         .grid{
-          display:grid;
-          grid-template-columns:repeat(7,1fr);
-          gap:2px;
-          margin-bottom:6px;
-        }
+  display:grid;
+  grid-template-columns:repeat(7,1fr); /* 부모 카드 폭에 맞춰 7등분 */
+  gap:2px;
+  margin-bottom:6px;
+}
         .cell{
-          width:13vw;
-          height:12vw; /* 세로가 더 짧게 */
-          border:2px solid #111;
-          border-radius:4px;
-          padding:2px;
-          position:relative;
-          background:#fff;
-          box-sizing:border-box;
-        }
-        .daynum{
-          font-weight:700;
-          font-size:3vw;
-        }
-        .note{
-          position:absolute; right:2px; top:22%;
-          font-size:2.6vw; font-weight:700;
-          background:#fff; padding:1px 2px; border-radius:4px; border:1px dashed #aaa;
-        }
+  border:2px solid #111;
+  border-radius:4px;
+  padding:2px;
+  background:#fff;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-start;
+  height:14vw;            /* 세로 고정 */
+  overflow:hidden;
+}
+
+.daynum{
+  font-weight:700;
+  font-size:3vw;
+  margin-bottom:2px;      /* 날짜와 금액 사이 간격 */
+  flex-shrink:0;          /* 줄어들지 않음 */
+  order:-1;               /* 항상 제일 위에 오도록 */
+}
+
+.note{
+  font-size:2.4vw;
+  font-weight:600;
+  color:#333;
+  margin-left:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
 
         /* 하단 상세 */
         .detail{
@@ -142,7 +170,13 @@
 
     <!-- 요일 -->
     <div class="weekdays">
-        <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+        <div>SUN</div>
+        <div>MON</div>
+        <div>TUE</div>
+        <div>WED</div>
+        <div>THU</div>
+        <div>FRI</div>
+        <div>SAT</div>
     </div>
 
     <!-- 달력 -->
@@ -153,11 +187,17 @@
         <div class="detail-left">
             <div class="selected-date" id="selectedDate">9월 10일</div>
             <div class="items" id="itemsList">
-                <div class="item"><div>교통비</div><div>-2,500원</div></div>
-                <div class="item"><div>식비</div><div>-75,000원</div></div>
+                <div class="item">
+                    <div>교통비</div>
+                    <div>-2,500원</div>
+                </div>
+                <div class="item">
+                    <div>식비</div>
+                    <div>-75,000원</div>
+                </div>
             </div>
         </div>
-        <a href="/calendar/add.html" class="add-btn">＋</a>
+        <a href="/calendar/add" class="add-btn">＋</a>
 
     </div>
 </div>
@@ -188,7 +228,6 @@
             sampleData[key].forEach((entry,idx)=>{
               const note=document.createElement('div');
               note.className='note';
-              note.style.top=`${25+idx*22}%`;
               note.textContent=entry.price;
               cell.appendChild(note);
             });
