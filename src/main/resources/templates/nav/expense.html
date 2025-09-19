@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>지출 내역</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f3f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            overflow-y: auto;
+            max-height: 95vh;
+        }
+
+        .month-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 14px;
+        }
+
+        .week-list {
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        .week-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        .section-title {
+            margin: 20px 0 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .category-list {
+            margin-top: 12px;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            background: #f8f9fb;
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 월 선택 -->
+    <div class="month-nav">
+        <button onclick="prevMonth()">◀</button>
+        <span id="currentMonth">9월</span>
+        <button onclick="nextMonth()">▶</button>
+    </div>
+
+    <!-- 주차별 지출 -->
+    <div class="week-list">
+        <div class="week-item"><span>9월 1주</span><span>50,000원</span></div>
+        <div class="week-item"><span>9월 2주</span><span>70,000원</span></div>
+        <div class="week-item"><span>9월 3주</span><span>40,000원</span></div>
+        <div class="week-item"><span>9월 4주</span><span>65,000원</span></div>
+    </div>
+
+    <!-- 카테고리별 지출 -->
+    <div class="section-title">카테고리별 지출</div>
+    <canvas id="expenseChart" width="300" height="300"></canvas>
+
+    <div class="category-list">
+        <div class="category-item"><span>식비</span><span>90,000원 (30%)</span></div>
+        <div class="category-item"><span>교통비</span><span>60,000원 (20%)</span></div>
+        <div class="category-item"><span>기타</span><span>150,000원 (50%)</span></div>
+    </div>
+</div>
+
+<script>
+    // 현재 월 표시 (간단히 예시)
+    let month = 9;
+    const currentMonthEl = document.getElementById("currentMonth");
+
+    function prevMonth() {
+        month--;
+        if(month < 1) month = 12;
+        currentMonthEl.innerText = month + "월";
+    }
+
+    function nextMonth() {
+        month++;
+        if(month > 12) month = 1;
+        currentMonthEl.innerText = month + "월";
+    }
+
+    // Chart.js 원형 그래프
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+
+    class Chart {
+        constructor(ctx, param2) {
+
+        }
+
+    }
+
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['식비', '교통비', '기타'],
+            datasets: [{
+                data: [30, 20, 50],
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

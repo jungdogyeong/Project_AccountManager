@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>예산 관리</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f3f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            overflow-y: auto;
+            max-height: 95vh;
+        }
+
+        .month-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .budget-info {
+            background: #f8f9fb;
+            padding: 14px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 18px;
+            cursor: pointer; /* 클릭 가능 */
+        }
+
+        .budget-info h2 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .budget-info p {
+            margin: 6px 0;
+            font-size: 15px;
+            color: #555;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 16px 0 10px;
+        }
+
+        .category {
+            margin-bottom: 16px;
+            cursor: pointer; /* 클릭 가능 */
+        }
+
+        .category-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 16px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5563DE, #74ABE2);
+            width: 0;
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 월 선택 -->
+    <div class="month-nav">
+        <button onclick="prevMonth()">◀</button>
+        <span id="currentMonth">9월</span>
+        <button onclick="nextMonth()">▶</button>
+    </div>
+
+    <!-- 예산 요약 (총 예산 클릭 시 modifyTotal.html로 이동) -->
+    <div class="budget-info" onclick="location.href='/nav/budget/modifyTotal.html'">
+        <h2>총 예산: <span id="totalBudget">1,200,000</span>원</h2>
+        <p>현재까지 쓴 예산: <span id="usedBudget">800,000</span>원</p>
+        <p>남은 예산: <span id="remainingBudget">400,000</span>원</p>
+    </div>
+
+    <!-- 카테고리별 예산 -->
+    <div class="section-title">카테고리별 예산</div>
+
+    <!-- 식비 클릭 시 modifyCategory.html로 이동 -->
+    <div class="category" onclick="location.href='/nav/budget/modifyCategory.html?category=food'">
+        <div class="category-label">
+            <span>식비</span>
+            <span><span id="foodUsed">300,000</span>원 / 500,000원</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="foodBar"></div>
+        </div>
+    </div>
+
+    <!-- 교통비 클릭 시 modifyCategory.html로 이동 -->
+    <div class="category" onclick="location.href='/nav/budget/modifyCategory.html?category=transport'">
+        <div class="category-label">
+            <span>교통비</span>
+            <span><span id="transportUsed">20,000</span>원 / 50,000원</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="transportBar"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 현재 월
+    let month = 9;
+    const currentMonthEl = document.getElementById("currentMonth");
+
+    function prevMonth() {
+        month--;
+        if(month < 1) month = 12;
+        currentMonthEl.innerText = month + "월";
+    }
+
+    function nextMonth() {
+        month++;
+        if(month > 12) month = 1;
+        currentMonthEl.innerText = month + "월";
+    }
+
+    // 카테고리별 예산 사용률
+    function updateProgress() {
+        const foodUsed = 300000;
+        const foodTotal = 500000;
+        const transportUsed = 20000;
+        const transportTotal = 50000;
+
+        document.getElementById("foodBar").style.width = (foodUsed / foodTotal * 100) + "%";
+        document.getElementById("transportBar").style.width = (transportUsed / transportTotal * 100) + "%";
+    }
+
+    updateProgress();
+</script>
+</body>
+</html>

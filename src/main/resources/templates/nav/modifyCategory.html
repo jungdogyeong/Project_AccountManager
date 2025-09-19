@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>카테고리별 편집</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f3f5f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            margin-right: 10px;
+            color: #333;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+            color: #333;
+        }
+
+        .form-group {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        select {
+            width: 85%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            outline: none;
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 80%;
+            font-size: 20px;
+            padding: 10px;
+            text-align: center;
+            border: none;
+            border-bottom: 2px solid #ccc;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-bottom: 2px solid #5563DE;
+        }
+
+        .form-group span {
+            font-size: 18px;
+            margin-left: 5px;
+            color: #333;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            background: #5563DE;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #3f4db7;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 상단 헤더 -->
+    <div class="header">
+        <button onclick="history.back()">◀</button>
+        <h1>카테고리별 편집</h1>
+    </div>
+
+    <!-- 카테고리 선택 -->
+    <div class="form-group">
+        <label for="category"></label><select id="category">
+            <option value="식비">식비</option>
+            <option value="교통비">교통비</option>
+            <option value="여행비">여행비</option>
+        </select>
+    </div>
+
+    <!-- 입력창 -->
+    <div class="form-group">
+        <input type="number" id="categoryBudget" value="500000"><label for="categoryBudget"> </label> <span>원</span>
+    </div>
+
+    <!-- 완료 버튼 -->
+    <button class="btn" onclick="saveCategoryBudget()">완료</button>
+</div>
+
+<script>
+    function saveCategoryBudget() {
+        const category = document.getElementById("category").value;
+        const budget = document.getElementById("categoryBudget").value;
+        if (budget && budget > 0) {
+            alert(category + " 예산이 " + budget + "원으로 설정되었습니다.");
+            // 실제 연동 시 서버로 전송 가능
+            window.location.href = "/nav/budget/budget.html"; // 완료 후 이동 (경로 조정 가능)
+        } else {
+            alert("올바른 금액을 입력해주세요.");
+        }
+    }
+</script>
+</body>
+</html>
