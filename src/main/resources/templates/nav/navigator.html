@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>내비게이션</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f9fafc;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            height: 100vh;
+        }
+
+        .nav-bar {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #ffffff;
+            width: 100%;
+            max-width: 420px;
+            height: 70px;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            color: #666;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .nav-item i {
+            font-size: 22px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #007aff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="nav-bar">
+    <div class="nav-item active" onclick="navigate('/calendar')">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>Calendar</span>
+    </div>
+    <div class="nav-item" onclick="navigate('/expense')">
+        <i class="fa-solid fa-chart-column"></i>
+        <span>Expense</span>
+    </div>
+    <div class="nav-item" onclick="navigate('/budget')">
+        <i class="fa-solid fa-sack-dollar"></i>
+        <span>Budget</span>
+    </div>
+    <div class="nav-item" onclick="navigate('/category')">
+        <i class="fa-solid fa-list"></i>
+        <span>Category</span>
+    </div>
+</div>
+
+<script>
+    // 탭 이동 효과
+    function navigate(path) {
+        const items = document.querySelectorAll(".nav-item");
+        items.forEach(item => item.classList.remove("active"));
+        event.currentTarget.classList.add("active");
+
+        // 👉 실제로 페이지 이동하려면 아래 사용:
+        // window.location.href = path + ".html";
+        alert("이동: " + path);
+    }
+</script>
+</body>
+</html>
