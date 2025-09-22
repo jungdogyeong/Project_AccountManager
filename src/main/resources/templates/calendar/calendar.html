@@ -7,10 +7,13 @@
     <style>
         :root {
             --primary-blue: #007bff;
-            --light-gray-bg: #f9f9f9;
-            --item-bg: #e0e0e0;
-            --border-color: #ddd;
-            --text-color: #333;
+            --income-green: #28a745;
+            --expense-red: #dc3545;
+            --light-gray-bg: #f8f9fa;
+            --item-bg: #ffffff;
+            --border-color: #dee2e6;
+            --text-color: #212529;
+            --text-secondary: #6c757d;
         }
         body {
             margin: 0;
@@ -23,125 +26,118 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 16px;
+            padding: 10px 16px;
             background-color: #ffffff;
             border-bottom: 1px solid var(--border-color);
-            position: relative; /* 자식 요소의 absolute 위치 기준 */
-            top: 0;
-            z-index: 10;
-        }
-        /* ▼▼▼ [수정] h1의 absolute 관련 속성 제거 ▼▼▼ */
-        .top-bar h1 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: bold;
+            position: sticky; top: 0; z-index: 10;
         }
         .top-bar .icon-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: none; border: none; font-size: 24px; cursor: pointer;
+            width: 44px; height: 44px;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--text-secondary);
         }
-
-        /* ▼▼▼ [수정] month-nav 그룹을 중앙 정렬 ▼▼▼ */
         .month-nav {
-            display: flex;
-            align-items: center;
-            gap: 16px; /* 아이콘과 글자 사이 간격 */
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            display: flex; align-items: center; gap: 8px;
+            white-space: nowrap;
         }
+        .month-nav h1 { margin: 0; font-size: 18px; font-weight: 600; }
 
-        /* 메인 콘텐츠 영역 */
         .content-wrapper { padding: 16px; }
 
         .summary {
-            text-align: right; margin-bottom: 16px; font-size: 14px; line-height: 1.5;
+            display: flex; justify-content: flex-end; gap: 20px;
+            margin-bottom: 20px; font-size: 15px;
         }
-        .summary .income { color: #28a745; }
-        .summary .expense { color: #dc3545; }
+        .summary > div { display: flex; align-items: center; gap: 8px; }
+        .summary span { font-weight: 600; }
+        .summary .income { color: var(--income-green); }
+        .summary .expense { color: var(--expense-red); }
 
         .calendar-card {
-            background: #ffffff; border: 1px solid var(--border-color); border-radius: 8px; padding: 12px;
+            background: #ffffff; border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
         }
 
         .weekdays {
-            display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; font-weight: bold;
-            font-size: 13px; color: #666; padding-bottom: 8px; margin-bottom: 8px;
-            border-bottom: 1px solid var(--border-color);
+            display: grid; grid-template-columns: repeat(7, 1fr); text-align: center;
+            font-weight: 600; font-size: 13px; color: var(--text-secondary);
+            padding-bottom: 8px; margin-bottom: 8px;
         }
 
         .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .cell {
-            border-radius: 6px; padding: 4px 2px; box-sizing: border-box; display: flex;
-            flex-direction: column; align-items: center; justify-content: flex-start;
-            height: 70px; overflow: hidden; cursor: pointer; border: 2px solid transparent;
+            border-radius: 8px; padding: 4px 2px;
+            display: flex; flex-direction: column; align-items: center;
+            height: 75px; overflow: hidden; cursor: pointer;
+            border: 2px solid transparent;
             transition: background-color 0.2s, border-color 0.2s;
         }
         .cell.disabled { pointer-events: none; }
-        .cell .daynum { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
-        .cell.disabled .daynum { color: #ccc; }
-        .cell.today { background-color: #eaf2ff; }
-        .cell.selected { border-color: var(--primary-blue); background-color: #dbeafe; }
+        .cell .daynum { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+        .cell.disabled .daynum { color: #ced4da; }
+        .cell.today .daynum {
+            color: var(--primary-blue); position: relative;
+        }
+        .cell.today .daynum::after {
+            content: ''; position: absolute; left: 50%; bottom: -2px;
+            transform: translateX(-50%); width: 60%; height: 2px;
+            background: var(--primary-blue); border-radius: 1px;
+        }
+        .cell.selected { border-color: var(--primary-blue); background-color: #eaf2ff; }
 
         .note {
-            font-size: 11px; font-weight: 500; white-space: nowrap; overflow: hidden;
-            text-overflow: ellipsis; width: 100%; text-align: center;
+            font-size: 11px; font-weight: 500;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            width: 100%; text-align: center; padding: 1px 0;
         }
-        .note.income { color: #28a745; }
-        .note.expense { color: #dc3545; }
+        .note.income { color: var(--income-green); }
+        .note.expense { color: var(--expense-red); }
 
-        .detail { margin-top: 16px; position: relative; }
-        .selected-date { font-size: 18px; font-weight: bold; margin-bottom: 12px; }
+        .detail { margin-top: 24px; }
+        .selected-date { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
         .items { display: flex; flex-direction: column; gap: 8px; }
         .item {
-            background: var(--item-bg); padding: 10px 12px; border-radius: 8px; display: flex;
+            background: var(--item-bg); border: 1px solid var(--border-color);
+            padding: 12px 14px; border-radius: 8px; display: flex;
             justify-content: space-between; align-items: center; font-size: 15px;
         }
+        .item .price { font-weight: 600; }
 
-        .add-btn {
-            position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px;
-            border-radius: 50%; background: var(--primary-blue); color: #fff; border: none;
-            font-size: 28px; cursor: pointer; display: flex; align-items: center;
-            justify-content: center; text-decoration: none; box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-        }
+.add-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: #007bff;  /* 파란색 배경 */
+    color: #fff;          /* 흰색 '+' */
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+}
 
+.add-btn.show {
+    display: block;  /* show 클래스가 있을 때만 보임 */
+}
+
+
+        /* 모달 스타일 */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); display: none; align-items: center;
-            justify-content: center; z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.5); display: none;
+            align-items: center; justify-content: center; z-index: 1000;
         }
         .modal-overlay.show { display: flex; }
         .modal-content {
-            background-color: white; padding: 20px; border-radius: 10px;
-            width: 80%; max-width: 300px;
+            background-color: white; padding: 24px; border-radius: 12px;
+            width: 85%; max-width: 320px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        .modal-content h2 { text-align: center; margin-top: 0; font-size: 18px; }
-        .year-selector {
-            width: 100%; padding: 10px; font-size: 16px; border: 1px solid var(--border-color);
-            border-radius: 8px; margin-bottom: 16px;
-        }
-        .month-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px;
-        }
-        .month-button {
-            padding: 12px 5px; font-size: 14px; font-weight: 700;
-            border: 1px solid var(--border-color); border-radius: 8px; background-color: #f1f1f1;
-            cursor: pointer;
-        }
-        .month-button.selected {
-            background-color: var(--primary-blue); color: white; border-color: var(--primary-blue);
-        }
-        .modal-actions { text-align: center; }
-        .modal-actions button {
-            width: 100%; padding: 12px; font-size: 16px; font-weight: bold; border-radius: 8px;
-            border: none; cursor: pointer; background-color: var(--primary-blue); color: white;
+        .modal-content h2 { text-align: center; margin-top: 0; font-size: 18px; font-weight: 600; }
+        .year-selector, .month-button, .modal-actions button {
+            border-radius: 8px; font-weight: 600;
         }
     </style>
 </head>
@@ -151,16 +147,22 @@
     <button class="icon-btn" id="menuIcon">≡</button>
     <div class="month-nav">
         <button class="icon-btn" id="prev">‹</button>
-        <h1 id="monthLabel">2025년 9월</h1>
+        <h1 id="monthLabel"></h1>
         <button class="icon-btn" id="next">›</button>
     </div>
-    <div style="width: 40px;"></div>
+    <div style="width: 44px;"></div>
 </div>
 
 <div class="content-wrapper">
     <div class="summary">
-        <div>수입 <span class="income">+800,000</span></div>
-        <div>지출 <span class="expense">-275,000</span></div>
+        <div>
+            <span>수입</span>
+            <span class="income" id="totalIncome">0</span>
+        </div>
+        <div>
+            <span>지출</span>
+            <span class="expense" id="totalExpense">0</span>
+        </div>
     </div>
 
     <div class="calendar-card">
@@ -176,7 +178,10 @@
     </div>
 </div>
 
-<a href="/calendar/add" class="add-btn">+</a>
+<a href="/calendar/add">
+    <button class="add-btn" id="addBtn">+</button>
+</a>
+
 
 <div class="modal-overlay" id="datePickerModal">
     <div class="modal-content">
@@ -190,10 +195,10 @@
 </div>
 
 <script>
-    // JavaScript 코드는 이전과 동일합니다.
     const sampleData = {
-      "2025-09-06": [{title:"수입", price:"+38,500"},{title:"수수료", price:"+3,000"}],
-      "2025-09-10": [{title:"교통비", price:"-2,500"},{title:"식비", price:"-75,000"}]
+      "2025-09-06": [{title:"월급", price:"2500000"},{title:"보너스", price:"300000"}],
+      "2025-09-10": [{title:"교통비", price:"-2500"},{title:"식비", price:"-75000"}],
+      "2025-10-15": [{title:"쇼핑", price:"-120000"},{title:"커피", price:"-4500"}]
     };
 
     const today = new Date();
@@ -202,18 +207,19 @@
 
     const grid = document.getElementById('calendarGrid');
     const monthLabel = document.getElementById('monthLabel');
-    const menuIcon = document.getElementById('menuIcon');
-    const datePickerModal = document.getElementById('datePickerModal');
-    const yearSelect = document.getElementById('yearSelect');
-    const monthGrid = document.getElementById('monthGrid');
-    const confirmDateBtn = document.getElementById('confirmDateBtn');
 
     function renderCalendar(year, month) {
         grid.innerHTML = '';
         const firstDayOfMonth = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
+        let totalIncome = 0;
+        let totalExpense = 0;
 
-        for (let i = 0; i < 42; i++) {
+        const totalCellsWithOffset = firstDayOfMonth + daysInMonth;
+        const rowsNeeded = Math.ceil(totalCellsWithOffset / 7);
+        const totalCellsToRender = rowsNeeded * 7;
+
+        for (let i = 0; i < totalCellsToRender; i++) {
             const cell = document.createElement('div');
             cell.className = 'cell';
             const day = i - firstDayOfMonth + 1;
@@ -233,11 +239,13 @@
 
                 if (sampleData[key]) {
                     sampleData[key].forEach(entry => {
+                        const price = parseInt(entry.price);
+                        if (price > 0) totalIncome += price;
+                        else totalExpense += price;
                         const note = document.createElement('div');
                         note.className = 'note';
-                        const price = parseInt(entry.price.replace(/,/g, ''));
                         note.classList.add(price > 0 ? 'income' : 'expense');
-                        note.textContent = price.toLocaleString();
+                        note.textContent = Math.abs(price).toLocaleString();
                         cell.appendChild(note);
                     });
                 }
@@ -252,39 +260,48 @@
             grid.appendChild(cell);
         }
         updateMonthLabel(year, month);
+        updateSummary(totalIncome, totalExpense);
     }
 
-    function updateMonthLabel(year, month) {
-        monthLabel.textContent = `${year}년 ${month + 1}월`;
+    function updateMonthLabel(year, month) { monthLabel.textContent = `${year}년 ${month + 1}월`; }
+    function updateSummary(income, expense) {
+        document.getElementById('totalIncome').textContent = income.toLocaleString();
+        document.getElementById('totalExpense').textContent = Math.abs(expense).toLocaleString();
     }
 
-    function selectDay(key){
-      const label = document.getElementById('selectedDate');
-      const list = document.getElementById('itemsList');
-      if (!key) {
-          label.textContent = '날짜를 선택하세요';
-          list.innerHTML = '';
-          return;
-      }
-      const [y,m,d] = key.split('-');
-      label.textContent = `${Number(m)}월 ${Number(d)}일`;
-      list.innerHTML = '';
-      const entries = sampleData[key] || [];
-      if (entries.length === 0) {
-        list.innerHTML = '<div class="item"><span>내역 없음</span></div>';
-        return;
-      }
-      entries.forEach(e => {
-        const price = parseInt(e.price.replace(/,/g, ''));
-        const priceColor = price > 0 ? 'var(--primary-blue)' : '#333';
-        const formattedPrice = `${price > 0 ? '+' : ''}${price.toLocaleString()}원`;
-
-        const it = document.createElement('div');
-        it.className = 'item';
-        it.innerHTML = `<span>${e.title}</span><span style="color: ${priceColor}; font-weight: bold;">${formattedPrice}</span>`;
-        list.appendChild(it);
-      });
+    // ▼▼▼ [수정] selected-date 라벨에서 "내역" 글자 제거 ▼▼▼
+    function selectDay(key) {
+        const label = document.getElementById('selectedDate');
+        const list = document.getElementById('itemsList');
+        if (!key) {
+            label.textContent = '날짜를 선택하세요';
+            list.innerHTML = '';
+            return;
+        }
+        const [y, m, d] = key.split('-');
+        label.textContent = `${Number(m)}월 ${Number(d)}일`; // "내역" 글자 제거
+        list.innerHTML = '';
+        const entries = sampleData[key] || [];
+        if (entries.length === 0) {
+            list.innerHTML = '<div class="item"><span>내역 없음</span></div>';
+            return;
+        }
+        entries.forEach(e => {
+            const price = parseInt(e.price);
+            const priceColor = price > 0 ? 'var(--income-green)' : 'var(--expense-red)';
+            const formattedPrice = `${Math.abs(price).toLocaleString()}원`;
+            const it = document.createElement('div');
+            it.className = 'item';
+            it.innerHTML = `<span>${e.title}</span><span class="price" style="color: ${priceColor};">${formattedPrice}</span>`;
+            list.appendChild(it);
+        });
     }
+
+    const menuIcon = document.getElementById('menuIcon');
+    const datePickerModal = document.getElementById('datePickerModal');
+    const yearSelect = document.getElementById('yearSelect');
+    const monthGrid = document.getElementById('monthGrid');
+    const confirmDateBtn = document.getElementById('confirmDateBtn');
 
     function openModal() {
         yearSelect.innerHTML = '';
@@ -309,26 +326,18 @@
         datePickerModal.classList.add('show');
     }
 
-    function closeModal() {
-        datePickerModal.classList.remove('show');
-    }
+    function closeModal() { datePickerModal.classList.remove('show'); }
 
     document.getElementById('prev').addEventListener('click', () => {
         currentMonth--;
-        if (currentMonth < 0) {
-            currentMonth = 11;
-            currentYear--;
-        }
+        if (currentMonth < 0) { currentMonth = 11; currentYear--; }
         renderCalendar(currentYear, currentMonth);
         selectDay(null);
     });
 
     document.getElementById('next').addEventListener('click', () => {
         currentMonth++;
-        if (currentMonth > 11) {
-            currentMonth = 0;
-            currentYear++;
-        }
+        if (currentMonth > 11) { currentMonth = 0; currentYear++; }
         renderCalendar(currentYear, currentMonth);
         selectDay(null);
     });
@@ -348,10 +357,7 @@
     confirmDateBtn.addEventListener('click', () => {
         const selectedYear = parseInt(yearSelect.value);
         const selectedMonthEl = monthGrid.querySelector('.selected');
-        if (!selectedMonthEl) {
-            alert('월을 선택해주세요.');
-            return;
-        }
+        if (!selectedMonthEl) { alert('월을 선택해주세요.'); return; }
         const selectedMonth = parseInt(selectedMonthEl.dataset.month);
 
         currentYear = selectedYear;
