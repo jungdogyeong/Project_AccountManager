@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -103,9 +103,12 @@
         <button id="editBtn">편집</button>
     </div>
 </div>
-
-<div class="categories" id="categoryList"></div>
-<button class="add-btn" id="addBtn">+</button>
+<a th:href=@{"/category/category_modify"}>
+    <div class="categories" id="categoryList"></div>
+</a>
+<a href="/category/category_modify">
+    <button class="add-btn" id="addBtn">+</button>
+</a>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
