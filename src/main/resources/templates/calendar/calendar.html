@@ -105,6 +105,12 @@
             justify-content: space-between; align-items: center; font-size: 15px;
         }
         .item .price { font-weight: 600; }
+        /* ▼ 추가: 아이콘과 제목 정렬 */
+        .item .category-info {
+            display: flex;
+            align-items: center;
+            gap: 8px; /* 아이콘과 텍스트 간격 */
+        }
 
         /* add-btn: category_main.html 스타일과 동일 */
         .add-btn {
@@ -201,10 +207,18 @@
 </div>
 
 <script>
+    // ▼ 추가: 카테고리 이름과 아이콘 매핑
+    const categoryMap = {
+        "식비": "🍚", "교통비": "🚌", "쇼핑": "🛍️", "문화생활": "🎬",
+        "여행": "✈️", "통신비": "📱", "주거비": "🏠", "의료비": "💊",
+        "교육비": "📚", "기타": "✨"
+    };
+
+    // ▼ 수정: 샘플 데이터의 title을 카테고리 이름과 일치시킴
     const sampleData = {
-      "2025-09-06": [{title:"월급", price:"2500000"},{title:"보너스", price:"300000"}],
-      "2025-09-10": [{title:"교통비", price:"-2500"},{title:"식비", price:"-75000"}],
-      "2025-10-15": [{title:"쇼핑", price:"-120000"},{title:"커피", price:"-4500"}]
+      "2025-09-06": [{title:"기타", price:"2500000"}, {title:"기타", price:"300000"}],
+      "2025-09-10": [{title:"교통비", price:"-2500"}, {title:"식비", price:"-75000"}],
+      "2025-10-15": [{title:"쇼핑", price:"-120000"}, {title:"식비", price:"-4500"}]
     };
 
     const today = new Date();
@@ -297,7 +311,15 @@
             const formattedPrice = `${Math.abs(price).toLocaleString()}원`;
             const it = document.createElement('div');
             it.className = 'item';
-            it.innerHTML = `<span>${e.title}</span><span class="price" style="color: ${priceColor};">${formattedPrice}</span>`;
+            // ▼ 수정: 아이콘을 찾아서 제목과 함께 표시
+            const icon = categoryMap[e.title] || '❔'; // 매핑에 없는 카테고리는 물음표 아이콘
+            it.innerHTML = `
+                <div class="category-info">
+                    <span>${icon}</span>
+                    <span>${e.title}</span>
+                </div>
+                <span class="price" style="color: ${priceColor};">${formattedPrice}</span>
+            `;
             list.appendChild(it);
         });
     }

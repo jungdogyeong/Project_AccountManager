@@ -132,12 +132,8 @@
         <div class="tab active expense" id="expenseTab">지출</div>
     </div>
 
-    <select class="field">
+    <select class="field" id="categorySelect">
         <option>카테고리 선택</option>
-        <option>식비</option>
-        <option>교통비</option>
-        <option>쇼핑</option>
-        <option>기타</option>
     </select>
 
     <input type="number" class="field" placeholder="금액 입력"/>
@@ -150,21 +146,53 @@
 </div>
 
 <script>
-    const incomeTab = document.getElementById('incomeTab');
-    const expenseTab = document.getElementById('expenseTab');
+    document.addEventListener('DOMContentLoaded', () => {
+        const incomeTab = document.getElementById('incomeTab');
+        const expenseTab = document.getElementById('expenseTab');
+        const categorySelect = document.getElementById('categorySelect');
 
-    function updateTabs(activeTab) {
-        if (activeTab === 'income') {
-            incomeTab.classList.add('active');
-            expenseTab.classList.remove('active');
-        } else {
-            expenseTab.classList.add('active');
-            incomeTab.classList.remove('active');
+        // 탭 활성화 로직
+        function updateTabs(activeTab) {
+            if (activeTab === 'income') {
+                incomeTab.classList.add('active', 'income');
+                expenseTab.classList.remove('active', 'expense');
+            } else {
+                expenseTab.classList.add('active', 'expense');
+                incomeTab.classList.remove('active', 'income');
+            }
         }
-    }
 
-    incomeTab.addEventListener('click', () => updateTabs('income'));
-    expenseTab.addEventListener('click', () => updateTabs('expense'));
+        incomeTab.addEventListener('click', () => updateTabs('income'));
+        expenseTab.addEventListener('click', () => updateTabs('expense'));
+
+        // category_main.html의 기본 카테고리/아이콘과 동일한 값을 가져오는 함수
+        const getDefaultCategories = () => [
+            { name: "식비", icon: "🍚" }, { name: "교통비", icon: "🚌" },
+            { name: "쇼핑", icon: "🛍️" }, { name: "문화생활", icon: "🎬" },
+            { name: "여행", icon: "✈️" }, { name: "통신비", icon: "📱" },
+            { name: "주거비", icon: "🏠" }, { name: "의료비", icon: "💊" },
+            { name: "교육비", icon: "📚" }, { name: "기타", icon: "✨" }
+        ];
+
+        // localStorage에서 카테고리를 로드하여 드롭다운에 추가
+        function loadCategories() {
+            const storedCategories = localStorage.getItem('categories');
+            let categories = storedCategories ? JSON.parse(storedCategories) : getDefaultCategories();
+
+            if (categories.length === 0) {
+                categories = getDefaultCategories();
+            }
+
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat.name;
+                option.textContent = `${cat.icon} ${cat.name}`; // 아이콘과 이름을 함께 표시
+                categorySelect.appendChild(option);
+            });
+        }
+
+        loadCategories(); // 페이지 로드 시 카테고리 로드
+    });
 </script>
 
 </body>
