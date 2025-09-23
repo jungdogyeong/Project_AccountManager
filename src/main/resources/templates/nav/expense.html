@@ -39,7 +39,6 @@
         .week-list {
             border-top: 1px solid #ddd;
             padding-top: 10px;
-            margin-bottom: 20px;
         }
 
         .week-item {
@@ -88,7 +87,7 @@
     </div>
 
     <!-- 카테고리별 지출 -->
-    <div class="section-title">카테고리별 지출 (해당월 1일 ~ 금일까지)</div>
+    <div class="section-title">카테고리별 지출</div>
     <canvas id="expenseChart" width="300" height="300"></canvas>
 
     <div class="category-list">
@@ -96,10 +95,11 @@
         <div class="category-item"><span>교통비</span><span>60,000원 (20%)</span></div>
         <div class="category-item"><span>기타</span><span>150,000원 (50%)</span></div>
     </div>
+    <a href="/navigator/expense" class="expense-btn">expense</a>
 </div>
 
 <script>
-    // 현재 월 표시
+    // 현재 월 표시 (간단히 예시)
     let month = 9;
     const currentMonthEl = document.getElementById("currentMonth");
 
@@ -115,7 +115,7 @@
         currentMonthEl.innerText = month + "월";
     }
 
-    // Chart.js 원형 그래프 (파이 차트)
+    // Chart.js 원형 그래프
     const ctx = document.getElementById('expenseChart').getContext('2d');
 
     class Chart {
@@ -126,11 +126,11 @@
     }
 
     new Chart(ctx, {
-        type: 'pie',  // 원형 그래프
+        type: 'pie',
         data: {
             labels: ['식비', '교통비', '기타'],
             datasets: [{
-                data: [90, 60, 150],
+                data: [30, 20, 50],
                 backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
             }]
         },
@@ -143,11 +143,6 @@
             }
         }
     });
-
-    /*
-    👉 원 그래프가 안 뜨면 아래처럼 bar 그래프로 변경하면 됩니다:
-    type: 'bar',
-    */
 </script>
 </body>
 </html>

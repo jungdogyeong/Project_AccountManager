@@ -24,6 +24,7 @@
             box-shadow: 0 6px 18px rgba(0,0,0,0.12);
             overflow-y: auto;
             max-height: 95vh;
+            position: relative;
         }
 
         .month-nav {
@@ -92,6 +93,24 @@
             text-decoration: none;
             color: inherit;
         }
+
+        /* budget-btn 스타일 */
+        .budget-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: #5563DE;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .budget-btn:hover {
+            background: #3f4db7;
+        }
     </style>
 </head>
 <body>
@@ -140,6 +159,9 @@
             </div>
         </div>
     </a>
+
+    <!-- 새로 추가된 budget-btn -->
+    <a href="/navigator/budget" class="budget-btn">budget</a>
 </div>
 
 <script>
@@ -174,4 +196,5 @@
 </script>
 </body>
 </html>
+
 
