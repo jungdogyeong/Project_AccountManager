@@ -4,90 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>가계부 카테고리</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { margin: 0; font-family: sans-serif; background: #f9f9f9; }
+        :root {
+            --primary-blue: #6a82fb;
+            --primary-gradient: linear-gradient(135deg, #6a82fb, #4c64f6);
+            --light-gray-bg: #f9f9f9;
+            --item-bg: #ffffff;
+            --border-color: #eef2f7;
+            --text-color: #343a40;
+            --text-secondary: #868e96;
+        }
 
-        /* 상단 바: 타이틀 중앙 정렬을 위해 수정됨 */
+        body {
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--light-gray-bg);
+        }
+
         .top-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 16px;
-            background-color: #ffffff;
-            border-bottom: 1px solid #ddd;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            padding: 10px 16px;
+            background-color: var(--item-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky; top: 0; z-index: 10;
         }
         .top-bar h1 {
             margin: 0;
             font-size: 18px;
-            font-weight: bold;
-            /* 중앙 정렬을 위한 핵심 스타일 */
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            font-weight: 600;
+            position: absolute; left: 50%; transform: translateX(-50%);
         }
         .top-bar button {
-            background: none;
-            border: none;
-            font-size: 16px;
-            cursor: pointer;
-            padding: 0 8px;
+            background: none; border: none; font-size: 15px;
+            font-weight: 500; cursor: pointer; padding: 8px;
+            color: var(--text-secondary); transition: color 0.2s ease;
         }
-        /* 버튼 그룹 정렬을 위한 컨테이너 */
+        .top-bar button:hover { color: var(--text-color); }
+        #editBtn { color: var(--primary-blue); font-weight: 700; }
+
         .top-bar .left-buttons, .top-bar .right-buttons {
-            display: flex;
-            align-items: center;
-            flex: 1; /* 양쪽 공간을 차지하도록 설정 */
+            display: flex; align-items: center; flex: 1;
         }
-        .top-bar .right-buttons {
-            justify-content: flex-end; /* 오른쪽 정렬 */
-        }
+        .top-bar .right-buttons { justify-content: flex-end; }
 
 
         .categories {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 16px;
-            padding: 16px;
+            padding: 24px 16px;
         }
         .category {
             text-align: center;
             cursor: default;
         }
         .category-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: #e0e0e0;
+            width: 64px; height: 64px;
+            border-radius: 20px; /* 둥근 사각형으로 변경 */
+            background: #f1f3f5; /* 부드러운 배경색 */
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 8px;
-            font-size: 24px;
-        }
-        /* 편집 모드: 회색 배경 제거, 커서만 변경 */
-        .category.editable {
-            cursor: pointer;
-        }
-        .add-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #007bff;
-            color: #fff;
-            border: none;
             font-size: 28px;
-            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .category-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .category.editable { cursor: pointer; }
+        .category.editable:hover .category-icon {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .add-btn {
             display: none;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            position: fixed; bottom: 20px; right: 20px;
+            width: 56px; height: 56px; border-radius: 50%;
+            background: var(--primary-gradient);
+            color: #fff; border: none; font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(76, 100, 246, 0.4);
+            transition: all 0.3s ease;
         }
-        .add-btn.show {
-            display: block;
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(76, 100, 246, 0.5);
         }
+        .add-btn.show { display: flex; }
     </style>
 </head>
 <body>
@@ -103,12 +119,10 @@
         <button id="editBtn">편집</button>
     </div>
 </div>
-<a th:href=@{"/category/category_modify"}>
-    <div class="categories" id="categoryList"></div>
-</a>
-<a href="/category/category_modify">
-    <button class="add-btn" id="addBtn">+</button>
-</a>
+
+<div class="categories" id="categoryList"></div>
+
+<a href="/category/category_modify.html" class="add-btn" id="addBtn">+</a>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
@@ -130,7 +144,7 @@
             const storedCategories = localStorage.getItem('categories');
             let categories = storedCategories ? JSON.parse(storedCategories) : getDefaultCategories();
 
-            if (JSON.parse(storedCategories)?.length === 0) {
+            if (!storedCategories || JSON.parse(storedCategories).length === 0) {
                  categories = getDefaultCategories();
             }
 
@@ -142,7 +156,7 @@
                 categoryEl.className = 'category';
                 categoryEl.innerHTML = `
                     <div class="category-icon">${cat.icon}</div>
-                    <div>${cat.name}</div>
+                    <div class="category-name">${cat.name}</div>
                 `;
                 categoryEl.addEventListener("click", () => {
                     if (isEditMode) {
@@ -178,7 +192,6 @@
             }
         });
 
-        addBtn.addEventListener("click", () => location.href = "category_modify.html");
         document.getElementById("backBtn").addEventListener("click", () => history.back());
 
         loadAndDisplayCategories();

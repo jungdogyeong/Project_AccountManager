@@ -4,20 +4,24 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <title>모바일 캘린더</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-blue: #007bff;
-            --income-green: #28a745;
-            --expense-red: #dc3545;
-            --light-gray-bg: #f8f9fa;
+            --primary-blue: #6a82fb;
+            --primary-gradient: linear-gradient(135deg, #6a82fb, #4c64f6);
+            --income-green: #20c997;
+            --expense-red: #fa5252;
+            --light-gray-bg: #f9f9f9;
             --item-bg: #ffffff;
-            --border-color: #dee2e6;
+            --border-color: #eef2f7;
             --text-color: #212529;
-            --text-secondary: #6c757d;
+            --text-secondary: #868e96;
         }
         body {
             margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+            font-family: 'Noto Sans KR', sans-serif;
             background: var(--light-gray-bg);
             color: var(--text-color);
         }
@@ -41,116 +45,142 @@
             display: flex; align-items: center; gap: 8px;
             white-space: nowrap;
         }
-        .month-nav h1 { margin: 0; }
+        .month-nav h1 {
+            font-family: 'Poppins', 'Noto Sans KR', sans-serif;
+            font-size: 20px; font-weight: 600; margin: 0;
+        }
 
         .content-wrapper { padding: 16px; }
 
         .summary {
-            display: flex; justify-content: flex-end; gap: 20px;
-            margin-bottom: 20px; font-size: 15px;
+            background: var(--item-bg);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: flex; justify-content: space-around;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid var(--border-color);
         }
-        .summary > div { display: flex; align-items: center; gap: 8px; }
-        .summary span { font-weight: 600; }
+        .summary > div { text-align: center; }
+        .summary .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 4px; }
+        .summary .amount { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 16px; }
         .summary .income { color: var(--income-green); }
         .summary .expense { color: var(--expense-red); }
 
         .calendar-card {
-            background: #ffffff; border: 1px solid var(--border-color);
-            border-radius: 12px; padding: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            background: var(--item-bg); border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
 
         .weekdays {
             display: grid; grid-template-columns: repeat(7, 1fr); text-align: center;
-            font-weight: 600; font-size: 13px; color: var(--text-secondary);
+            font-weight: 500; font-size: 13px; color: var(--text-secondary);
             padding-bottom: 8px; margin-bottom: 8px;
         }
 
         .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .cell {
             border-radius: 8px; padding: 4px 2px;
-            display: flex; flex-direction: column; align-items: center;
-            height: 75px; overflow: hidden; cursor: pointer;
+            display: flex; flex-direction: column;
+            align-items: stretch; /* ▼ 수정: 자식 요소(note)가 너비를 채우도록 변경 */
+            min-height: 75px; overflow: hidden; cursor: pointer;
             border: 2px solid transparent;
-            transition: background-color 0.2s, border-color 0.2s;
+            transition: all 0.2s ease-in-out;
         }
-        .cell.disabled { pointer-events: none; }
-        .cell .daynum { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
-        .cell.disabled .daynum { color: #ced4da; }
-        .cell.today .daynum {
-            color: var(--primary-blue); position: relative;
+        .cell:hover:not(.disabled):not(.selected) { background-color: #f8f9fa; }
+        .cell.disabled { pointer-events: none; opacity: 0.5; }
+        .cell .daynum {
+            font-weight: 600; font-size: 14px; margin-bottom: 4px;
+            align-self: center; /* ▼ 추가: 날짜 번호는 가운데 정렬 유지 */
         }
-        .cell.today .daynum::after {
-            content: ''; position: absolute; left: 50%; bottom: -2px;
-            transform: translateX(-50%); width: 60%; height: 2px;
-            background: var(--primary-blue); border-radius: 1px;
-        }
-        .cell.selected { border-color: var(--primary-blue); background-color: #eaf2ff; }
 
+        .cell.today .daynum {
+            width: 24px; height: 24px; line-height: 24px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            color: white;
+            text-align: center;
+        }
+        .cell.selected { border-color: var(--primary-blue); background-color: #eef2ff; }
+
+        /* ▼ 수정: 6자리 표시를 위해 font-size, letter-spacing 조정 및 오른쪽 정렬 */
         .note {
-            font-size: 11px; font-weight: 500;
+            font-size: 9px;
+            letter-spacing: -0.5px;
+            font-weight: 500;
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-            width: 100%; text-align: center; padding: 1px 0;
+            width: 100%;
+            text-align: right;
+            padding-right: 4px;
+            box-sizing: border-box;
         }
         .note.income { color: var(--income-green); }
         .note.expense { color: var(--expense-red); }
 
         .detail { margin-top: 24px; }
-        .selected-date { margin-bottom: 12px; }
+        .selected-date {
+            margin-bottom: 12px; font-size: 18px;
+            font-weight: 700;
+        }
 
         .items { display: flex; flex-direction: column; gap: 8px; }
         .item {
             background: var(--item-bg); border: 1px solid var(--border-color);
-            padding: 12px 14px; border-radius: 8px; display: flex;
+            padding: 12px 14px; border-radius: 10px; display: flex;
             justify-content: space-between; align-items: center; font-size: 15px;
+            transition: all 0.2s ease;
         }
-        .item .price { font-weight: 600; }
-        /* ▼ 추가: 아이콘과 제목 정렬 */
-        .item .category-info {
-            display: flex;
-            align-items: center;
-            gap: 8px; /* 아이콘과 텍스트 간격 */
-        }
+        .item:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .item .price { font-weight: 600; font-family: 'Poppins', sans-serif; }
+        .item .category-info { display: flex; align-items: center; gap: 10px; }
+        .item .category-info span:first-child { font-size: 20px; }
 
-        /* add-btn: category_main.html 스타일과 동일 */
         .add-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: #007bff;
-            color: #fff;
-            border: none;
-            font-size: 28px;
+            position: fixed; bottom: 20px; right: 20px;
+            width: 56px; height: 56px; border-radius: 50%;
+            background: var(--primary-gradient);
+            color: #fff; border: none; font-size: 28px;
             cursor: pointer;
+            box-shadow: 0 4px 15px rgba(76, 100, 246, 0.4);
+            transition: all 0.3s ease;
         }
+        .add-btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(76, 100, 246, 0.5); }
 
-        /* 모달 스타일 */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.5); display: none;
             align-items: center; justify-content: center; z-index: 1000;
         }
-        .modal-overlay.show { display: flex; }
+        .modal-overlay.show { display: flex; animation: fadeIn 0.3s ease; }
         .modal-content {
-            background-color: white; padding: 24px; border-radius: 12px;
-            width: 85%; max-width: 320px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background-color: white; padding: 24px; border-radius: 16px;
+            width: 85%; max-width: 320px; box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            animation: slideUp 0.3s ease;
         }
-        .modal-content h2 { text-align: center; margin-top: 0; font-size: 18px; font-weight: 600; }
-        .year-selector, .month-button, .modal-actions button {
-            border-radius: 8px; font-weight: 600;
-        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* ▼ 추가: month-nav h1과 selected-date 폰트 통일 */
-        .month-nav h1,
-        .selected-date {
-            font-size: 18px;
-            font-weight: 600;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
-            line-height: 1.4;
-            margin: 0;
+        .modal-content h2 { text-align: center; margin-top: 0; margin-bottom: 20px; font-size: 18px; font-weight: 600; }
+        .year-selector {
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color);
+            font-size: 16px; font-weight: 600; margin-bottom: 16px;
+        }
+        .month-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+        }
+        .month-button {
+            padding: 12px 0; border-radius: 8px; border: 1px solid var(--border-color);
+            background: none; font-weight: 500; cursor: pointer; transition: all 0.2s ease;
+        }
+        .month-button:hover { background-color: #f1f3f5; }
+        .month-button.selected { background: var(--primary-blue); color: white; border-color: var(--primary-blue); }
+
+        .modal-actions { margin-top: 24px; }
+        #confirmDateBtn {
+            width: 100%; padding: 14px; font-size: 16px; font-weight: 700;
+            background: var(--primary-gradient); color: white; border: none;
+            border-radius: 10px; cursor: pointer;
         }
     </style>
 </head>
@@ -169,12 +199,12 @@
 <div class="content-wrapper">
     <div class="summary">
         <div>
-            <span>수입</span>
-            <span class="income" id="totalIncome">0</span>
+            <div class="label">수입</div>
+            <div class="amount income" id="totalIncome">0</div>
         </div>
         <div>
-            <span>지출</span>
-            <span class="expense" id="totalExpense">0</span>
+            <div class="label">지출</div>
+            <div class="amount expense" id="totalExpense">0</div>
         </div>
     </div>
 
@@ -207,14 +237,12 @@
 </div>
 
 <script>
-    // ▼ 추가: 카테고리 이름과 아이콘 매핑
     const categoryMap = {
         "식비": "🍚", "교통비": "🚌", "쇼핑": "🛍️", "문화생활": "🎬",
         "여행": "✈️", "통신비": "📱", "주거비": "🏠", "의료비": "💊",
         "교육비": "📚", "기타": "✨"
     };
 
-    // ▼ 수정: 샘플 데이터의 title을 카테고리 이름과 일치시킴
     const sampleData = {
       "2025-09-06": [{title:"기타", price:"2500000"}, {title:"기타", price:"300000"}],
       "2025-09-10": [{title:"교통비", price:"-2500"}, {title:"식비", price:"-75000"}],
@@ -235,55 +263,55 @@
         let totalIncome = 0;
         let totalExpense = 0;
 
-        const totalCellsWithOffset = firstDayOfMonth + daysInMonth;
-        const rowsNeeded = Math.ceil(totalCellsWithOffset / 7);
-        const totalCellsToRender = rowsNeeded * 7;
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'cell disabled';
+            grid.appendChild(cell);
+        }
 
-        for (let i = 0; i < totalCellsToRender; i++) {
+        for (let day = 1; day <= daysInMonth; day++) {
             const cell = document.createElement('div');
             cell.className = 'cell';
-            const day = i - firstDayOfMonth + 1;
+            const dayNum = document.createElement('div');
+            dayNum.className = 'daynum';
+            dayNum.textContent = day;
+            cell.appendChild(dayNum);
 
-            if (i >= firstDayOfMonth && day <= daysInMonth) {
-                const dayNum = document.createElement('div');
-                dayNum.className = 'daynum';
-                dayNum.textContent = day;
-                cell.appendChild(dayNum);
+            const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+            cell.dataset.day = key;
 
-                const key = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                cell.dataset.day = key;
-
-                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    cell.classList.add('today');
-                }
-
-                if (sampleData[key]) {
-                    sampleData[key].forEach(entry => {
-                        const price = parseInt(entry.price);
-                        if (price > 0) totalIncome += price;
-                        else totalExpense += price;
-                        const note = document.createElement('div');
-                        note.className = 'note';
-                        note.classList.add(price > 0 ? 'income' : 'expense');
-                        note.textContent = Math.abs(price).toLocaleString();
-                        cell.appendChild(note);
-                    });
-                }
-                cell.addEventListener('click', () => {
-                    document.querySelector('.cell.selected')?.classList.remove('selected');
-                    cell.classList.add('selected');
-                    selectDay(key);
-                });
-            } else {
-                cell.classList.add('disabled');
+            if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                cell.classList.add('today');
             }
+
+            if (sampleData[key]) {
+                sampleData[key].forEach(entry => {
+                    const price = parseInt(entry.price);
+                    if (price > 0) totalIncome += price;
+                    else totalExpense += price;
+                });
+
+                sampleData[key].forEach(entry => {
+                    const price = parseInt(entry.price);
+                    const note = document.createElement('div');
+                    note.className = 'note';
+                    note.classList.add(price > 0 ? 'income' : 'expense');
+                    note.textContent = Math.abs(price).toLocaleString();
+                    cell.appendChild(note);
+                });
+            }
+            cell.addEventListener('click', () => {
+                document.querySelector('.cell.selected')?.classList.remove('selected');
+                cell.classList.add('selected');
+                selectDay(key);
+            });
             grid.appendChild(cell);
         }
         updateMonthLabel(year, month);
         updateSummary(totalIncome, totalExpense);
     }
 
-    function updateMonthLabel(year, month) { monthLabel.textContent = `${year}년 ${month + 1}월`; }
+    function updateMonthLabel(year, month) { monthLabel.textContent = `${year}.${String(month + 1).padStart(2, '0')}`; }
     function updateSummary(income, expense) {
         document.getElementById('totalIncome').textContent = income.toLocaleString();
         document.getElementById('totalExpense').textContent = Math.abs(expense).toLocaleString();
@@ -298,11 +326,11 @@
             return;
         }
         const [y, m, d] = key.split('-');
-        label.textContent = `${Number(m)}월 ${Number(d)}일`;
+        label.textContent = `${Number(m)}월 ${Number(d)}일 내역`;
         list.innerHTML = '';
         const entries = sampleData[key] || [];
         if (entries.length === 0) {
-            list.innerHTML = '<div class="item"><span>내역 없음</span></div>';
+            list.innerHTML = '<div class="item"><span>내역이 없습니다.</span></div>';
             return;
         }
         entries.forEach(e => {
@@ -311,8 +339,7 @@
             const formattedPrice = `${Math.abs(price).toLocaleString()}원`;
             const it = document.createElement('div');
             it.className = 'item';
-            // ▼ 수정: 아이콘을 찾아서 제목과 함께 표시
-            const icon = categoryMap[e.title] || '❔'; // 매핑에 없는 카테고리는 물음표 아이콘
+            const icon = categoryMap[e.title] || '❔';
             it.innerHTML = `
                 <div class="category-info">
                     <span>${icon}</span>
@@ -370,6 +397,8 @@
     });
 
     menuIcon.addEventListener('click', openModal);
+    monthLabel.addEventListener('click', openModal);
+
     datePickerModal.addEventListener('click', (e) => {
         if (e.target === datePickerModal) closeModal();
     });
