@@ -7,6 +7,6 @@ function navigate(element, path) {
     element.classList.add("active");
 
     // 👉 실제로 페이지를 이동하려면 아래 주석을 해제하세요.
-    // window.location.href = path;
+    window.location.href = path;
     console.log("이동 경로:", path);
 }

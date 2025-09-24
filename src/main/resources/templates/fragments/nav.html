@@ -3,22 +3,22 @@
 <body>
 
 <div class="nav-bar" th:fragment="navFragment">
-    <div class="nav-item active" onclick="navigate(this, '/calendar')">
+    <a class="nav-item active" th:href="@{/calendar/calendar}">
         <i class="fa-solid fa-calendar-days"></i>
         <span>Calendar</span>
-    </div>
-    <div class="nav-item" onclick="navigate(this, '/expense')">
+    </a>
+    <a class="nav-item" th:href="@{/expense/expense}">
         <i class="fa-solid fa-chart-column"></i>
         <span>Expense</span>
-    </div>
-    <div class="nav-item" onclick="navigate(this, '/budget')">
+    </a>
+    <a class="nav-item" th:href="@{/budget/budget}">
         <i class="fa-solid fa-sack-dollar"></i>
         <span>Budget</span>
-    </div>
-    <div class="nav-item" onclick="navigate(this, '/category')">
+    </a>
+    <a class="nav-item" th:href="@{/category/category_main}">
         <i class="fa-solid fa-list"></i>
         <span>Category</span>
-    </div>
+    </a>
 </div>
 
 </body>
