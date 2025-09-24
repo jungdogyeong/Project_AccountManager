@@ -6,15 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class CategoryController {
 
-    @GetMapping("/category/category_main")
+    @GetMapping("/category/categoryMain")
     public String test() {
 
-        return "/category/category_main";
+        return "/category/categoryMain";
     }
 
-    @GetMapping("/category/category_modify")
+    @GetMapping("/category/categoryModify")
     public String addExpense() {
 
-        return "/category/category_modify";
+        return "/category/categoryModify";
     }
 }

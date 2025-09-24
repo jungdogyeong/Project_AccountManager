@@ -8,6 +8,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap"
           rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+
+    <script defer th:src="@{/js/nav.js}"></script>
+
     <style>
         :root {
             --primary-blue: #6a82fb;
@@ -123,7 +127,7 @@
 
 <div class="categories" id="categoryList"></div>
 
-<a href="/category/category_modify">
+<a href="/category/categoryModify">
     <button class="add-btn" id="addBtn">+</button>
 </a>
 
@@ -200,5 +204,6 @@
         loadAndDisplayCategories();
     });
 </script>
+<div th:replace="~{fragments/nav :: navFragment}"></div>
 </body>
 </html>

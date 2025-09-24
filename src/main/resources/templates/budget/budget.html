@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>예산 관리</title>
@@ -7,6 +7,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+
+    <script defer th:src="@{/js/nav.js}"></script>
+
     <style>
         :root {
             --primary-blue: #6a82fb;
@@ -267,5 +271,6 @@
     function prevMonth() { if(--month < 1) month = 12; currentMonthEl.innerText = month + "월"; }
     function nextMonth() { if(++month > 12) month = 1; currentMonthEl.innerText = month + "월"; }
 </script>
+<div th:replace="~{fragments/nav :: navFragment}"></div>
 </body>
 </html>
