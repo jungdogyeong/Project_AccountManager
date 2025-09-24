@@ -9,6 +9,7 @@ public class navigatorController {
 
     @GetMapping("/nav/navigator")
     public String navigator(){
+
         return "/nav/navigator";
     }
 }
