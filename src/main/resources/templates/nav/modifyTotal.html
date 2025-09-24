@@ -1,121 +1,109 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <title>총 예산 수정</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-blue: #6a82fb;
+            --light-gray-bg: #f9f9f9;
+            --item-bg: #ffffff;
+            --border-color: #eef2f7;
+            --text-color: #343a40;
+            --text-secondary: #868e96;
+        }
         body {
             margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f3f5f9;
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--light-gray-bg);
+        }
+        .top-bar {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            height: 100vh;
+            padding: 10px 16px;
+            background-color: var(--item-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .top-bar h1 {
+            margin: 0; font-size: 18px; font-weight: 600;
+            position: absolute; left: 50%; transform: translateX(-50%);
+        }
+        .top-bar button {
+            background: none; border: none; font-size: 16px;
+            font-weight: 500; cursor: pointer; padding: 8px;
+            color: var(--text-secondary);
+        }
+        .top-bar .right-buttons button { color: var(--primary-blue); font-weight: 700; }
+        .top-bar .left-buttons, .top-bar .right-buttons {
+            display: flex; align-items: center; flex: 1;
+        }
+        .top-bar .left-buttons { justify-content: flex-start; }
+        .top-bar .right-buttons { justify-content: flex-end; }
+
+        .container {
+            padding: 24px 16px;
         }
 
-          {
+        .amount-wrapper {
+            position: relative;
+            background: var(--item-bg);
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid var(--border-color);
+        }
+        .amount-wrapper input {
             width: 100%;
-            max-width: 420px;
-            background: #ffffff;
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-        }
-
-        .header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .header button {
+            border: none;
             background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            margin-right: 10px;
-            color: #333;
-        }
-
-        .header h1 {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0;
-            color: #333;
-        }
-
-        .form-group {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        .form-group input {
-            width: 80%;
-            font-size: 20px;
-            padding: 10px;
-            text-align: center;
-            border: none;
-            border-bottom: 2px solid #ccc;
             outline: none;
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: right;
+            padding-right: 45px;
+            box-sizing: border-box;
+            color: var(--text-color);
         }
-
-        .form-group input:focus {
-            border-bottom: 2px solid #5563DE;
-        }
-
-        .form-group span {
-            font-size: 18px;
-            margin-left: 5px;
-            color: #333;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            font-size: 16px;
-            background: #5563DE;
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background 0.2s;
-        }
-
-        .btn:hover {
-            background: #3f4db7;
+        .amount-wrapper::after {
+            content: '원';
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 26px;
+            font-weight: 600;
+            color: var(--text-secondary);
         }
     </style>
 </head>
 <body>
+<div class="top-bar">
+    <div class="left-buttons">
+        <button onclick="history.back()">&lt;</button>
+    </div>
+    <h1>총 예산</h1>
+    <div class="right-buttons">
+        <button onclick="saveBudget()">완료</button>
+    </div>
+</div>
+
 <div class="container">
-    <!-- 상단 헤더 -->
-    <div class="header">
-        <button onclick="history.back()">◀</button>
-        <h1>총예산</h1>
+    <div class="amount-wrapper">
+        <input type="number" id="totalBudget" value="1200000" placeholder="0">
     </div>
-
-    <!-- 입력창 -->
-    <div class="form-group">
-        <input type="number" id="totalBudget" value="1200000"><label for="totalBudget"> </label> <span>원</span>
-    </div>
-
-    <!-- 완료 버튼 -->
-    <button class="btn" onclick="saveBudget()">완료</button>
-
 </div>
 
 <script>
     function saveBudget() {
         const budget = document.getElementById("totalBudget").value;
-        if (budget && budget > 0) {
-            alert("총 예산이 " + budget + "원으로 설정되었습니다.");
-            // 실제 연동 시 서버로 전송 가능
-            window.location.href = "/nav/budget/budget.html"; // 완료 후 이동 (경로 조정 가능)
+        if (budget && budget >= 0) {
+            alert("총 예산이 " + Number(budget).toLocaleString() + "원으로 설정되었습니다.");
+            location.href = "budget.html";
         } else {
             alert("올바른 금액을 입력해주세요.");
         }

@@ -1,147 +1,293 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>지출 내역</title>
+    <title>지출 분석</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
+        :root {
+            --primary-blue: #6a82fb;
+            --primary-gradient: linear-gradient(135deg, #6a82fb, #4c64f6);
+            --light-gray-bg: #f9f9f9;
+            --item-bg: #ffffff;
+            --border-color: #eef2f7;
+            --text-color: #343a40;
+            --text-secondary: #868e96;
+        }
         body {
             margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f3f5f9;
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--light-gray-bg);
+        }
+
+        .top-bar {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            padding: 10px 16px;
+            background-color: var(--item-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky; top: 0; z-index: 10;
+        }
+        .top-bar h1 {
+            margin: 0; font-size: 18px; font-weight: 600;
         }
 
-         {
-            width: 100%;
-            max-width: 420px;
-            background: #ffffff;
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-            overflow-y: auto;
-            max-height: 95vh;
+        .container {
+            padding: 24px 16px;
         }
 
         .month-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 14px;
+            margin-bottom: 24px;
+        }
+        .month-nav button {
+            background: none; border: none; font-size: 24px;
+            color: var(--text-secondary); cursor: pointer;
+        }
+        .month-nav #currentMonth {
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px; font-weight: 600;
         }
 
+        .card {
+            background: var(--item-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid var(--border-color);
+        }
+        .card-title {
+            font-size: 16px; font-weight: 700;
+            margin: 0 0 20px 0;
+        }
+
+        /* ▼▼▼ 수정된 스타일: 주차별 지출 목록 ▼▼▼ */
         .week-list {
-            border-top: 1px solid #ddd;
-            padding-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
-
         .week-item {
             display: flex;
-            justify-content: space-between;
-            margin: 8px 0;
+            justify-content: space-between; /* 양쪽 끝으로 정렬 */
+            align-items: center;
             font-size: 15px;
         }
+        /* 점선(.line) 스타일 제거 */
+        .week-item .week-label {
+            color: var(--text-color);
+            font-weight: 500;
+        }
+        .week-item .week-amount {
+            color: var(--text-color);
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+        /* ▲▲▲ 스타일 수정 완료 ▲▲▲ */
 
-        .section-title {
-            margin: 20px 0 10px;
-            font-size: 16px;
-            font-weight: bold;
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 250px;
+            margin: 0 auto;
+        }
+        #chartTotal {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+        }
+        #chartTotal .label {
+            font-size: 14px; font-weight: 500;
+            color: var(--text-secondary);
+        }
+        #chartTotal .total-amount {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px; font-weight: 700;
+            color: var(--text-color);
         }
 
         .category-list {
-            margin-top: 12px;
+            display: flex; flex-direction: column; gap: 16px;
         }
-
         .category-item {
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            background: #f8f9fb;
-            padding: 12px 14px;
-            border-radius: 10px;
-            margin-bottom: 8px;
-            font-size: 14px;
+        }
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .category-info .legend-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+        }
+        .category-info .icon {
+            font-size: 20px;
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            background: #f1f3f5;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .category-info .name {
+            font-size: 15px; font-weight: 500;
+        }
+        .category-amount .amount {
+            font-size: 16px; font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+        }
+        .category-amount .percentage {
+            font-size: 13px; color: var(--text-secondary);
+            margin-left: 8px;
         }
     </style>
 </head>
 <body>
+<div class="top-bar">
+    <h1>지출 분석</h1>
+</div>
+
 <div class="container">
-    <!-- 월 선택 -->
     <div class="month-nav">
-        <button onclick="prevMonth()">◀</button>
+        <button onclick="changeMonth(-1)">‹</button>
         <span id="currentMonth">9월</span>
-        <button onclick="nextMonth()">▶</button>
+        <button onclick="changeMonth(1)">›</button>
     </div>
 
-    <!-- 주차별 지출 -->
-    <div class="week-list">
-        <div class="week-item"><span>9월 1주</span><span>50,000원</span></div>
-        <div class="week-item"><span>9월 2주</span><span>70,000원</span></div>
-        <div class="week-item"><span>9월 3주</span><span>40,000원</span></div>
-        <div class="week-item"><span>9월 4주</span><span>65,000원</span></div>
+    <div class="card">
+        <div class="week-list" id="weekList">
+        </div>
     </div>
 
-    <!-- 카테고리별 지출 -->
-    <div class="section-title">카테고리별 지출</div>
-    <canvas id="expenseChart" width="300" height="300"></canvas>
-
-    <div class="category-list">
-        <div class="category-item"><span>식비</span><span>90,000원 (30%)</span></div>
-        <div class="category-item"><span>교통비</span><span>60,000원 (20%)</span></div>
-        <div class="category-item"><span>기타</span><span>150,000원 (50%)</span></div>
+    <div class="card">
+        <h2 class="card-title">카테고리별 지출</h2>
+        <div class="chart-container">
+            <canvas id="expenseChart"></canvas>
+            <div id="chartTotal"></div>
+        </div>
     </div>
-    <a href="/navigator/expense" class="expense-btn">expense</a>
+
+    <div class="card">
+        <h2 class="card-title">상세 내역</h2>
+        <div class="category-list" id="categoryList">
+        </div>
+    </div>
 </div>
 
 <script>
-    // 현재 월 표시 (간단히 예시)
-    let month = 9;
-    const currentMonthEl = document.getElementById("currentMonth");
+    // --- 샘플 데이터 ---
+    const weeklyData = [
+        { week: "9월 1주", amount: 50000 },
+        { week: "9월 2주", amount: 70000 },
+        { week: "9월 3주", amount: 40000 },
+        { week: "9월 4주", amount: 65000 }
+    ];
 
-    function prevMonth() {
-        month--;
-        if(month < 1) month = 12;
-        currentMonthEl.innerText = month + "월";
+    const expenseData = {
+        labels: ['식비', '교통비', '쇼핑', '문화생활', '기타'],
+        values: [95000, 60000, 120000, 75000, 30000],
+        colors: ['#845ef7', '#22b8cf', '#fcc419', '#40c057', '#adb5bd'],
+        icons: { '식비': '🍚', '교통비': '🚌', '쇼핑': '🛍️', '문화생활': '🎬', '기타': '✨' }
+    };
+
+    // --- 월 변경 ---
+    let currentMonth = 9;
+    const monthEl = document.getElementById("currentMonth");
+    function changeMonth(direction) {
+        currentMonth += direction;
+        if (currentMonth < 1) currentMonth = 12;
+        if (currentMonth > 12) currentMonth = 1;
+        monthEl.textContent = `${currentMonth}월`;
     }
 
-    function nextMonth() {
-        month++;
-        if(month > 12) month = 1;
-        currentMonthEl.innerText = month + "월";
-    }
+    // --- 주차별 목록 생성 ---
+    const weekListEl = document.getElementById('weekList');
+    weeklyData.forEach(item => {
+        const weekItem = document.createElement('div');
+        weekItem.className = 'week-item';
+        /* ▼▼▼ 수정된 SCRIPT: 점선(.line) 제거 ▼▼▼ */
+        weekItem.innerHTML = `
+            <span class="week-label">${item.week}</span>
+            <span class="week-amount">${item.amount.toLocaleString()}원</span>
+        `;
+        /* ▲▲▲ SCRIPT 수정 완료 ▲▲▲ */
+        weekListEl.appendChild(weekItem);
+    });
 
-    // Chart.js 원형 그래프
+    // --- 원형 그래프 생성 ---
     const ctx = document.getElementById('expenseChart').getContext('2d');
+    const totalExpense = expenseData.values.reduce((a, b) => a + b, 0);
 
-    class Chart {
-        constructor(ctx, param2) {
-            
-        }
-
-    }
-
-    new Chart(ctx, {
-        type: 'pie',
+    const expenseChart = new Chart(ctx, {
+        type: 'doughnut',
         data: {
-            labels: ['식비', '교통비', '기타'],
+            labels: expenseData.labels,
             datasets: [{
-                data: [30, 20, 50],
-                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                data: expenseData.values,
+                backgroundColor: expenseData.colors,
+                borderColor: '#fff',
+                borderWidth: 4,
+                hoverBorderWidth: 4,
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: true,
+            cutout: '70%',
             plugins: {
-                legend: {
-                    position: 'bottom'
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            let value = context.raw;
+                            let percentage = ((value / totalExpense) * 100).toFixed(1);
+                            return `${label}: ${value.toLocaleString()}원 (${percentage}%)`;
+                        }
+                    }
                 }
             }
         }
+    });
+
+    const chartTotalEl = document.getElementById('chartTotal');
+    chartTotalEl.innerHTML = `
+        <div class="label">총 지출</div>
+        <div class="total-amount">${totalExpense.toLocaleString()}원</div>
+    `;
+
+    // --- 카테고리 목록 생성 ---
+    const categoryListEl = document.getElementById('categoryList');
+    expenseData.labels.forEach((label, index) => {
+        const value = expenseData.values[index];
+        const percentage = ((value / totalExpense) * 100).toFixed(0);
+        const color = expenseData.colors[index];
+
+        const item = document.createElement('div');
+        item.className = 'category-item';
+        item.innerHTML = `
+            <div class="category-info">
+                <span class="legend-dot" style="background-color: ${color};"></span>
+                <span class="icon">${expenseData.icons[label] || '❔'}</span>
+                <span class="name">${label}</span>
+            </div>
+            <div class="category-amount">
+                <span class="amount">${value.toLocaleString()}원</span>
+                <span class="percentage">(${percentage}%)</span>
+            </div>
+        `;
+        categoryListEl.appendChild(item);
     });
 </script>
 </body>

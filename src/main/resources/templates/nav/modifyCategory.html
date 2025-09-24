@@ -1,144 +1,196 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>카테고리별 편집</title>
+    <title>카테고리별 예산 설정</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-blue: #6a82fb;
+            --light-gray-bg: #f9f9f9;
+            --item-bg: #ffffff;
+            --border-color: #eef2f7;
+            --text-color: #343a40;
+            --text-secondary: #868e96;
+        }
         body {
             margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f3f5f9;
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--light-gray-bg);
+        }
+        .top-bar {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            height: 100vh;
+            padding: 10px 16px;
+            background-color: var(--item-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky; top: 0; z-index: 10;
         }
-
-          {
-            width: 100%;
-            max-width: 420px;
-            background: #ffffff;
-            border-radius: 18px;
-            padding: 20px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        .top-bar h1 {
+            margin: 0; font-size: 18px; font-weight: 600;
+            position: absolute; left: 50%; transform: translateX(-50%);
         }
+        .top-bar button {
+            background: none; border: none; font-size: 16px;
+            font-weight: 500; cursor: pointer; padding: 8px;
+            color: var(--text-secondary);
+        }
+        .top-bar .right-buttons button { color: var(--primary-blue); font-weight: 700; }
+        .top-bar .left-buttons, .top-bar .right-buttons {
+            display: flex; align-items: center; flex: 1;
+        }
+        .top-bar .left-buttons { justify-content: flex-start; }
+        .top-bar .right-buttons { justify-content: flex-end; }
 
-        .header {
+        .container {
+            padding: 24px 16px;
+        }
+        .category-budget-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .category-budget-item {
             display: flex;
             align-items: center;
-            margin-bottom: 20px;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--item-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
         }
-
-        .header button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            margin-right: 10px;
-            color: #333;
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
+        .category-info .icon { font-size: 24px; }
+        .category-info .name { font-size: 16px; font-weight: 500; }
 
-        .header h1 {
-            font-size: 18px;
-            font-weight: bold;
-            margin: 0;
-            color: #333;
+        .budget-input-wrapper {
+            position: relative;
+            width: 50%;
         }
-
-        .form-group {
-            margin: 20px 0;
-            text-align: center;
-        }
-
-        select {
-            width: 85%;
-            padding: 12px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            outline: none;
-            margin-bottom: 20px;
-        }
-
-        .form-group input {
-            width: 80%;
-            font-size: 20px;
-            padding: 10px;
-            text-align: center;
-            border: none;
-            border-bottom: 2px solid #ccc;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-bottom: 2px solid #5563DE;
-        }
-
-        .form-group span {
-            font-size: 18px;
-            margin-left: 5px;
-            color: #333;
-        }
-
-        .btn {
-            display: block;
+        .budget-input {
             width: 100%;
-            padding: 14px;
-            font-size: 16px;
-            background: #5563DE;
             border: none;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 20px;
-            transition: background 0.2s;
+            background: #f1f3f5;
+            border-radius: 8px;
+            padding: 10px 30px 10px 12px;
+            box-sizing: border-box;
+            text-align: right;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-color);
+            outline: none;
         }
-
-        .btn:hover {
-            background: #3f4db7;
+        .budget-input-wrapper::after {
+            content: '원';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 15px;
         }
     </style>
 </head>
 <body>
+<div class="top-bar">
+    <div class="left-buttons">
+        <button onclick="history.back()">&lt;</button>
+    </div>
+    <h1>카테고리별 예산</h1>
+    <div class="right-buttons">
+        <button onclick="saveAllBudgets()">완료</button>
+    </div>
+</div>
+
 <div class="container">
-    <!-- 상단 헤더 -->
-    <div class="header">
-        <button onclick="history.back()">◀</button>
-        <h1>카테고리별 편집</h1>
+    <div class="category-budget-list" id="categoryBudgetList">
     </div>
-
-    <!-- 카테고리 선택 -->
-    <div class="form-group">
-        <label for="category"></label><select id="category">
-            <option value="식비">식비</option>
-            <option value="교통비">교통비</option>
-            <option value="여행비">여행비</option>
-        </select>
-    </div>
-
-    <!-- 입력창 -->
-    <div class="form-group">
-        <input type="number" id="categoryBudget" value="500000"><label for="categoryBudget"> </label> <span>원</span>
-    </div>
-
-    <!-- 완료 버튼 -->
-    <button class="btn" onclick="saveCategoryBudget()">완료</button>
-
 </div>
 
 <script>
-    function saveCategoryBudget() {
-        const category = document.getElementById("category").value;
-        const budget = document.getElementById("categoryBudget").value;
-        if (budget && budget > 0) {
-            alert(category + " 예산이 " + budget + "원으로 설정되었습니다.");
-            // 실제 연동 시 서버로 전송 가능
-            window.location.href = "/nav/budget/budget.html"; // 완료 후 이동 (경로 조정 가능)
-        } else {
+    // 페이지를 열 때마다 예시 데이터를 새로고침하는 함수
+    function resetAndSeedExampleData() {
+        // 기존 데이터를 삭제하여 초기화
+        localStorage.removeItem('categories');
+        localStorage.removeItem('categoryBudgets');
+
+        // 예시 데이터 생성
+        const defaultCategories = [
+            { name: "식비", icon: "🍚" }, { name: "교통비", icon: "🚌" },
+            { name: "쇼핑", icon: "🛍️" }, { name: "문화생활", icon: "🎬" },
+            { name: "여행", icon: "✈️" }, { name: "기타", icon: "✨" }
+        ];
+        localStorage.setItem('categories', JSON.stringify(defaultCategories));
+
+        const sampleCategoryBudgets = {
+            "식비": 500000,
+            "교통비": 150000,
+            "쇼핑": 250000
+        };
+        localStorage.setItem('categoryBudgets', JSON.stringify(sampleCategoryBudgets));
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        // ▼▼▼ 예시 데이터 강제 초기화 및 생성 ▼▼▼
+        resetAndSeedExampleData();
+        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+        const categoryBudgets = JSON.parse(localStorage.getItem('categoryBudgets')) || {};
+        const allCategories = JSON.parse(localStorage.getItem('categories')) || [];
+        const listEl = document.getElementById('categoryBudgetList');
+
+        allCategories.forEach(cat => {
+            const currentBudget = categoryBudgets[cat.name] || '';
+            const item = document.createElement('div');
+            item.className = 'category-budget-item';
+            item.innerHTML = `
+                <div class="category-info">
+                    <span class="icon">${cat.icon}</span>
+                    <span class="name">${cat.name}</span>
+                </div>
+                <div class="budget-input-wrapper">
+                    <input type="number" class="budget-input" data-category-name="${cat.name}" value="${currentBudget}" placeholder="">
+                </div>
+            `;
+            listEl.appendChild(item);
+        });
+    });
+
+    function saveAllBudgets() {
+        const inputs = document.querySelectorAll('.budget-input');
+        const newCategoryBudgets = {};
+        let isValid = true;
+
+        inputs.forEach(input => {
+            const name = input.dataset.categoryName;
+            const value = input.value;
+
+            if (value) {
+                const budgetAmount = parseInt(value);
+                if (isNaN(budgetAmount) || budgetAmount < 0) {
+                    isValid = false;
+                }
+                newCategoryBudgets[name] = budgetAmount;
+            }
+        });
+
+        if (!isValid) {
             alert("올바른 금액을 입력해주세요.");
+            return;
         }
+
+        localStorage.setItem('categoryBudgets', JSON.stringify(newCategoryBudgets));
+        alert("카테고리별 예산이 저장되었습니다.");
+        location.href = "budget.html";
     }
 </script>
 </body>
