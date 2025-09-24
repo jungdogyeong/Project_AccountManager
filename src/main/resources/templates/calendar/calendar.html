@@ -83,7 +83,7 @@
         .cell {
             border-radius: 8px; padding: 4px 2px;
             display: flex; flex-direction: column;
-            align-items: stretch; /* ▼ 수정: 자식 요소(note)가 너비를 채우도록 변경 */
+            align-items: stretch;
             min-height: 75px; overflow: hidden; cursor: pointer;
             border: 2px solid transparent;
             transition: all 0.2s ease-in-out;
@@ -92,19 +92,18 @@
         .cell.disabled { pointer-events: none; opacity: 0.5; }
         .cell .daynum {
             font-weight: 600; font-size: 14px; margin-bottom: 4px;
-            align-self: center; /* ▼ 추가: 날짜 번호는 가운데 정렬 유지 */
+            align-self: center;
         }
 
         .cell.today .daynum {
-            width: 24px; height: 24px; line-height: 24px;
-            border-radius: 50%;
-            background: var(--primary-gradient);
-            color: white;
-            text-align: center;
+            color: var(--primary-blue);
+            font-weight: 700;
+            border-bottom: 2px solid var(--primary-blue);
+            padding-bottom: 2px;
         }
+
         .cell.selected { border-color: var(--primary-blue); background-color: #eef2ff; }
 
-        /* ▼ 수정: 6자리 표시를 위해 font-size, letter-spacing 조정 및 오른쪽 정렬 */
         .note {
             font-size: 9px;
             letter-spacing: -0.5px;
@@ -125,6 +124,10 @@
         }
 
         .items { display: flex; flex-direction: column; gap: 8px; }
+        a.item {
+            color: inherit;
+            text-decoration: none;
+        }
         .item {
             background: var(--item-bg); border: 1px solid var(--border-color);
             padding: 12px 14px; border-radius: 10px; display: flex;
@@ -135,6 +138,7 @@
         .item .price { font-weight: 600; font-family: 'Poppins', sans-serif; }
         .item .category-info { display: flex; align-items: center; gap: 10px; }
         .item .category-info span:first-child { font-size: 20px; }
+        .item .memo { font-size: 13px; color: var(--text-secondary); margin-left: 8px; }
 
         .add-btn {
             position: fixed; bottom: 20px; right: 20px;
@@ -243,11 +247,14 @@
         "교육비": "📚", "기타": "✨"
     };
 
+    /* ▼▼▼▼▼▼▼▼▼▼ 데이터에 memo 속성을 추가했습니다 ▼▼▼▼▼▼▼▼▼▼ */
     const sampleData = {
-      "2025-09-06": [{title:"기타", price:"2500000"}, {title:"기타", price:"300000"}],
-      "2025-09-10": [{title:"교통비", price:"-2500"}, {title:"식비", price:"-75000"}],
-      "2025-10-15": [{title:"쇼핑", price:"-120000"}, {title:"식비", price:"-4500"}]
+      "2025-09-06": [{title:"기타", price:"2500000", memo:"월급"}, {title:"기타", price:"300000", memo:"보너스"}],
+      "2025-09-10": [{title:"교통비", price:"-2500", memo:"버스"}, {title:"식비", price:"-75000", memo:"친구랑 저녁"}],
+      "2025-10-15": [{title:"쇼핑", price:"-120000", memo:"겨울 옷"}, {title:"식비", price:"-4500", memo:"커피"}]
     };
+    /* ▲▲▲▲▲▲▲▲▲▲ 수정 완료 ▲▲▲▲▲▲▲▲▲▲ */
+
 
     const today = new Date();
     let currentYear = today.getFullYear();
@@ -317,6 +324,7 @@
         document.getElementById('totalExpense').textContent = Math.abs(expense).toLocaleString();
     }
 
+    /* ▼▼▼▼▼▼▼▼▼▼ selectDay 함수를 수정했습니다 ▼▼▼▼▼▼▼▼▼▼ */
     function selectDay(key) {
         const label = document.getElementById('selectedDate');
         const list = document.getElementById('itemsList');
@@ -326,7 +334,7 @@
             return;
         }
         const [y, m, d] = key.split('-');
-        label.textContent = `${Number(m)}월 ${Number(d)}일 내역`;
+        label.textContent = `${Number(m)}월 ${Number(d)}일`;
         list.innerHTML = '';
         const entries = sampleData[key] || [];
         if (entries.length === 0) {
@@ -337,19 +345,35 @@
             const price = parseInt(e.price);
             const priceColor = price > 0 ? 'var(--income-green)' : 'var(--expense-red)';
             const formattedPrice = `${Math.abs(price).toLocaleString()}원`;
-            const it = document.createElement('div');
+            const type = price > 0 ? 'income' : 'expense';
+
+            const it = document.createElement('a');
             it.className = 'item';
+
+            // URL 파라미터에 type, price, memo 정보를 추가합니다.
+            const params = new URLSearchParams({
+                date: key,
+                type: type,
+                category: e.title,
+                price: Math.abs(price), // 부호 없는 금액 전달
+                memo: e.memo || '' // 메모가 없으면 빈 문자열 전달
+            });
+            it.href = `/calendar/add?${params.toString()}`;
+
             const icon = categoryMap[e.title] || '❔';
+            // 상세 내역에 메모도 함께 표시되도록 수정
             it.innerHTML = `
                 <div class="category-info">
                     <span>${icon}</span>
                     <span>${e.title}</span>
+                    <span class="memo">${e.memo || ''}</span>
                 </div>
                 <span class="price" style="color: ${priceColor};">${formattedPrice}</span>
             `;
             list.appendChild(it);
         });
     }
+    /* ▲▲▲▲▲▲▲▲▲▲ 수정 완료 ▲▲▲▲▲▲▲▲▲▲ */
 
     const menuIcon = document.getElementById('menuIcon');
     const datePickerModal = document.getElementById('datePickerModal');
