@@ -7,7 +7,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/nav.css}">
+
+    <script defer th:src="@{/js/nav.js}"></script>
     <style>
+
         :root {
             --primary-blue: #6a82fb;
             --primary-gradient: linear-gradient(135deg, #6a82fb, #4c64f6);
@@ -20,6 +24,7 @@
             --text-secondary: #868e96;
         }
         body {
+<!--            padding-botton : 170px;-->
             margin: 0;
             font-family: 'Noto Sans KR', sans-serif;
             background: var(--light-gray-bg);
@@ -452,5 +457,6 @@
     selectDay(null);
 </script>
 
+<div th:replace="~{fragments/nav :: navFragment}"></div>
 </body>
 </html>

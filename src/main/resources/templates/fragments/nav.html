@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div class="nav-bar" th:fragment="navFragment">
+    <div class="nav-item active" onclick="navigate(this, '/calendar')">
+        <i class="fa-solid fa-calendar-days"></i>
+        <span>Calendar</span>
+    </div>
+    <div class="nav-item" onclick="navigate(this, '/expense')">
+        <i class="fa-solid fa-chart-column"></i>
+        <span>Expense</span>
+    </div>
+    <div class="nav-item" onclick="navigate(this, '/budget')">
+        <i class="fa-solid fa-sack-dollar"></i>
+        <span>Budget</span>
+    </div>
+    <div class="nav-item" onclick="navigate(this, '/category')">
+        <i class="fa-solid fa-list"></i>
+        <span>Category</span>
+    </div>
+</div>
+
+</body>
+</html>
