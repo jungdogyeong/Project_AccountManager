@@ -6,13 +6,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class BudgetRepository {
-    private final ExpenseDomain expenseDomain;
-    JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    public BudgetRepository(ExpenseDomain expenseDomain) {
-        this.expenseDomain = expenseDomain;
+    public BudgetRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
-
     public int getTotalExpense(int member_id) {
         String sql = """
                    SELECT SUM(amount)
