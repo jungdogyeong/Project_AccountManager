@@ -1,4 +1,4 @@
-package Project_Manager.AccountManager.reposirory;
+package Project_Manager.AccountManager.domain;
 
 import lombok.Data;
 

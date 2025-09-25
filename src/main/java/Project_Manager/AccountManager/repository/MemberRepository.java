@@ -1,6 +1,6 @@
 package Project_Manager.AccountManager.repository;
 
-import Project_Manager.AccountManager.reposirory.MemberDomain;
+import Project_Manager.AccountManager.domain.MemberDomain;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

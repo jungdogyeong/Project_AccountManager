@@ -1,6 +1,6 @@
 package Project_Manager.AccountManager.repository;
 
-import Project_Manager.AccountManager.reposirory.MemberDomain;
+import Project_Manager.AccountManager.domain.MemberDomain;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
