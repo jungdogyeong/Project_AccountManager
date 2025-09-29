@@ -12,21 +12,5 @@ import java.util.List;
 @Controller
 public class BudgetController {
 
-    private final BudgetService budgetService;
-
-    public BudgetController(BudgetService budgetService) {
-        this.budgetService = budgetService;
-    }
-
-    @GetMapping("/budget/budget")
-    public String getTotalAmount(
-            @RequestParam("member_id") int member_id,
-            Model model) {
-        int amount = budgetService.getTotal(member_id);
-
-        model.addAttribute("amount", amount);
-
-        return "/budget/budget";
-    }
 
 }
