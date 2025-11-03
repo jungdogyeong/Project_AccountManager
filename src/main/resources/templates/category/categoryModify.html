@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>카테고리 편집/추가</title>
+    <title th:text="${pageTitle}"></title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
@@ -18,206 +18,84 @@
             --danger-color: #e53e3e;
             --danger-bg: #fff5f5;
         }
-
-        body {
-            margin: 0;
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: var(--light-gray-bg);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        /* Common Top Bar Style */
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 16px;
-            background-color: var(--item-bg);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky; top: 0; z-index: 100;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .top-bar h1 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 600;
-            position: absolute; left: 50%; transform: translateX(-50%);
-        }
-        .top-bar button {
-            background: none; border: none; font-size: 16px;
-            font-weight: 500; cursor: pointer; padding: 8px;
-            color: var(--text-secondary); transition: color 0.2s, background-color 0.2s;
-        }
+        body { margin: 0; font-family: 'Noto Sans KR', sans-serif; background-color: var(--light-gray-bg); color: var(--text-color); display: flex; flex-direction: column; height: 100vh; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background-color: var(--item-bg); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .top-bar h1 { margin: 0; font-size: 18px; font-weight: 600; position: absolute; left: 50%; transform: translateX(-50%); }
+        .top-bar button { background: none; border: none; font-size: 16px; font-weight: 500; cursor: pointer; padding: 8px; color: var(--text-secondary); transition: color 0.2s, background-color 0.2s; }
         .top-bar button:hover { color: var(--text-color); }
-
-        .top-bar .left-buttons, .top-bar .right-buttons {
-            display: flex; align-items: center; flex: 1;
-        }
+        .top-bar .left-buttons, .top-bar .right-buttons { display: flex; align-items: center; flex: 1; }
         .top-bar .left-buttons { justify-content: flex-start; }
         .top-bar .right-buttons { justify-content: flex-end; }
         #doneBtn { color: var(--primary-blue); font-weight: 700; }
         #doneBtn:disabled { color: #adb5bd; cursor: not-allowed; }
-
-        .main-content {
-            padding: 24px 16px;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-
-        .name-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 24px;
-            background-color: var(--item-bg);
-            border-radius: 16px;
-            margin-bottom: 32px;
-            border: 1px solid var(--border-color);
-        }
-        .name-section .icon-preview {
-            width: 80px; height: 80px;
-            border-radius: 28px;
-            background: var(--light-gray-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            font-size: 40px;
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-        }
-        .name-section input {
-            border: 1px solid var(--border-color);
-            background: var(--light-gray-bg);
-            font-size: 18px;
-            text-align: center;
-            padding: 12px;
-            width: 90%;
-            max-width: 300px;
-            outline: none;
-            border-radius: 12px;
-            font-weight: 500;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        .name-section input:focus {
-            border-color: var(--primary-blue);
-            box-shadow: 0 0 0 3px rgba(106, 130, 251, 0.2);
-        }
-        .name-section input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .icon-section h2 {
-            font-size: 16px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            font-weight: 500;
-        }
-
-        .icon-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            gap: 16px;
-        }
-        .icon-option {
-            width: 60px; height: 60px;
-            border-radius: 20px;
-            background: var(--item-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            border: 2px solid var(--border-color);
-            transition: all 0.2s ease;
-        }
-        .icon-option:hover {
-            transform: scale(1.05);
-        }
-        .icon-option.selected {
-            border-color: var(--primary-blue);
-            background-color: #edf2ff;
-        }
-
-        .delete-section {
-            margin-top: 40px;
-            text-align: center;
-        }
-        #deleteBtn {
-            background: none;
-            border: none;
-            color: var(--danger-color);
-            font-size: 15px;
-            cursor: pointer;
-            padding: 10px 16px;
-            border-radius: 8px;
-            transition: background-color 0.2s;
-        }
-        #deleteBtn:hover {
-            background-color: var(--danger-bg);
-        }
-        #deleteBtn.hidden { display: none; }
+        .main-content { padding: 24px 16px; flex-grow: 1; overflow-y: auto; }
+        .name-section { display: flex; flex-direction: column; align-items: center; padding: 24px; background-color: var(--item-bg); border-radius: 16px; margin-bottom: 32px; border: 1px solid var(--border-color); }
+        .name-section .icon-preview { width: 80px; height: 80px; border-radius: 28px; background: var(--light-gray-bg); display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 40px; color: var(--text-secondary); border: 1px solid var(--border-color); }
+        .name-section input { border: 1px solid var(--border-color); background: var(--light-gray-bg); font-size: 18px; text-align: center; padding: 12px; width: 90%; max-width: 300px; outline: none; border-radius: 12px; font-weight: 500; transition: border-color 0.2s, box-shadow 0.2s; }
+        .name-section input:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 3px rgba(106, 130, 251, 0.2); }
+        .name-section input::placeholder { color: var(--text-secondary); }
+        .icon-section h2 { font-size: 16px; color: var(--text-secondary); margin-bottom: 16px; font-weight: 500; }
+        .icon-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 16px; }
+        .icon-option { width: 60px; height: 60px; border-radius: 20px; background: var(--item-bg); display: flex; align-items: center; justify-content: center; font-size: 24px; cursor: pointer; border: 2px solid var(--border-color); transition: all 0.2s ease; }
+        .icon-option:hover { transform: scale(1.05); }
+        .icon-option.selected { border-color: var(--primary-blue); background-color: #edf2ff; }
+        .delete-section { margin-top: 40px; text-align: center; }
+        #deleteBtn { background: none; border: none; color: var(--danger-color); font-size: 15px; cursor: pointer; padding: 10px 16px; border-radius: 8px; transition: background-color 0.2s; }
+        #deleteBtn:hover { background-color: var(--danger-bg); }
     </style>
 </head>
 <body>
-<div class="top-bar">
-    <div class="left-buttons">
-        <button id="backBtn">&lt;</button>
-    </div>
-    <h1 id="pageTitle"></h1>
-    <div class="right-buttons">
-        <button id="doneBtn">완료</button>
-    </div>
-</div>
 
-<div class="main-content">
-    <div class="name-section">
-        <div class="icon-preview" id="iconPreview">?</div>
-        <input type="text" id="categoryNameInput" placeholder="카테고리 이름" maxlength="10">
-    </div>
+<form id="saveForm" th:action="@{/category/save}" th:object="${category}" method="post">
+    <input type="hidden" th:field="*{category_id}" />
+    <input type="hidden" th:field="*{user_id}" />
+    <input type="hidden" th:field="*{category_img}" id="selectedIconInput" required>
 
-    <div class="icon-section">
-        <h2>아이콘 선택</h2>
-        <div class="icon-grid" id="iconGrid"></div>
+    <div class="top-bar">
+        <div class="left-buttons">
+            <button type="button" th:onclick="|location.href='@{/category/categoryMain(user_id=${category.user_id})}'|">&lt;</button>
+        </div>
+        <h1 id="pageTitle" th:text="${pageTitle}">카테고리 편집/추가</h1>
+        <div class="right-buttons">
+            <button type="submit" id="doneBtn">완료</button>
+        </div>
     </div>
 
-    <div class="delete-section">
-        <button id="deleteBtn">카테고리 삭제</button>
+    <div class="main-content">
+        <div class="name-section">
+            <div class="icon-preview" id="iconPreview" th:text="*{category_img} ?: '?'">?</div>
+            <input type="text" th:field="*{category_name}" placeholder="카테고리 이름" maxlength="10" required>
+        </div>
+
+        <div class="icon-section">
+            <h2>아이콘 선택</h2>
+            <div class="icon-grid" id="iconGrid"></div>
+        </div>
     </div>
+</form> <div class="delete-section" th:if="${category.category_id > 0}" style="padding: 0 16px;">
+    <form th:action="@{/category/delete}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+        <input type="hidden" name="id" th:value="${category.category_id}" />
+        <input type="hidden" name="user_id" th:value="${category.user_id}" />
+        <button type="submit" id="deleteBtn">카테고리 삭제</button>
+    </form>
 </div>
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        const pageTitle = document.getElementById("pageTitle");
-        const categoryNameInput = document.getElementById("categoryNameInput");
-        const deleteBtn = document.getElementById("deleteBtn");
-        const doneBtn = document.getElementById("doneBtn");
-        const backBtn = document.getElementById("backBtn");
         const iconPreview = document.getElementById("iconPreview");
         const iconGrid = document.getElementById("iconGrid");
+        const selectedIconInput = document.getElementById('selectedIconInput');
 
-        let categories = JSON.parse(localStorage.getItem('categories')) || [];
         const icons = [ '🍚', '🚌', '🛍️', '🎬', '✈️', '📱', '🏠', '💊', '📚', '✨', '☕', '💸', '🎁', '🐶', '🚗', '👕', '💄', '🎉', '💡', '💧', '🏥', '📈', '🎳', '❤️' ];
-        let selectedIcon = null;
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const originalName = decodeURIComponent(urlParams.get('name') || '');
-        const originalIcon = decodeURIComponent(urlParams.get('icon') || '');
-        const isEditing = originalName && originalIcon;
-
-        function checkDoneButtonState() {
-            const hasName = categoryNameInput.value.trim() !== '';
-            const hasIcon = selectedIcon !== null;
-            doneBtn.disabled = !(hasName && hasIcon);
-        }
+        let selectedIcon = selectedIconInput.value || null;
 
         icons.forEach(icon => {
             const iconEl = document.createElement('div');
             iconEl.classList.add('icon-option');
             iconEl.textContent = icon;
+            if (icon === selectedIcon) {
+                iconEl.classList.add('selected');
+            }
             iconEl.addEventListener('click', () => {
                 const currentSelected = document.querySelector('.icon-option.selected');
                 if (currentSelected) {
@@ -226,76 +104,9 @@
                 iconEl.classList.add('selected');
                 selectedIcon = icon;
                 iconPreview.textContent = selectedIcon;
-                iconPreview.style.color = 'inherit';
-                checkDoneButtonState();
+                selectedIconInput.value = selectedIcon; // hidden input에 값 설정
             });
             iconGrid.appendChild(iconEl);
-        });
-
-        categoryNameInput.addEventListener('input', checkDoneButtonState);
-
-        if (isEditing) {
-            pageTitle.textContent = "카테고리 편집";
-            categoryNameInput.value = originalName;
-            selectedIcon = originalIcon;
-            iconPreview.textContent = selectedIcon;
-            iconPreview.style.color = 'inherit';
-
-            const currentIconEl = Array.from(iconGrid.children).find(el => el.textContent === selectedIcon);
-            if(currentIconEl) {
-                currentIconEl.classList.add('selected');
-            }
-            deleteBtn.classList.remove("hidden");
-        } else {
-            pageTitle.textContent = "카테고리 추가";
-            deleteBtn.classList.add("hidden");
-        }
-        checkDoneButtonState();
-
-        backBtn.addEventListener("click", () => {
-            // Consider asking for confirmation if there are unsaved changes
-            history.back();
-        });
-
-        deleteBtn.addEventListener("click", () => {
-           if (confirm(`'${originalName}' 카테고리를 정말 삭제하시겠습니까? 관련된 모든 내역이 영향을 받을 수 있습니다.`)) {
-               const updatedCategories = categories.filter(c => c.name !== originalName);
-               localStorage.setItem('categories', JSON.stringify(updatedCategories));
-               alert("삭제되었습니다.");
-               location.href = "category_main.html";
-           }
-        });
-
-        doneBtn.addEventListener("click", (e) => {
-            if (e.target.disabled) return;
-
-            const newName = categoryNameInput.value.trim();
-            if (!newName) {
-                alert("카테고리 이름을 입력해주세요.");
-                return;
-            }
-
-            const isDuplicate = categories.some(
-                c => c.name === newName && c.name !== originalName
-            );
-
-            if (isDuplicate) {
-                alert("이미 존재하는 카테고리 이름입니다.");
-                return;
-            }
-
-            if (isEditing) {
-                const categoryIndex = categories.findIndex(c => c.name === originalName);
-                if (categoryIndex > -1) {
-                    categories[categoryIndex] = { name: newName, icon: selectedIcon };
-                }
-            } else {
-                categories.push({ name: newName, icon: selectedIcon });
-            }
-
-            localStorage.setItem('categories', JSON.stringify(categories));
-            alert("저장되었습니다.");
-            location.href = "category_main.html";
         });
     });
 </script>

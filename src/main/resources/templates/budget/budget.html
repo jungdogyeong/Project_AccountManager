@@ -186,48 +186,10 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
-        // ▼▼▼ 예시 데이터 강제 초기화 및 생성 ▼▼▼
-        resetAndSeedExampleData();
-        // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
         loadBudgets();
     });
 
-    // 페이지를 열 때마다 예시 데이터를 새로고침하는 함수
-    function resetAndSeedExampleData() {
-        // 기존 데이터를 삭제하여 초기화
-        localStorage.removeItem('categories');
-        localStorage.removeItem('totalBudget');
-        localStorage.removeItem('categoryBudgets');
-
-        // 예시 데이터 생성
-        const defaultCategories = [
-            { name: "식비", icon: "🍚" }, { name: "교통비", icon: "🚌" },
-            { name: "쇼핑", icon: "🛍️" }, { name: "문화생활", icon: "🎬" },
-            { name: "여행", icon: "✈️" }, { name: "기타", icon: "✨" }
-        ];
-        localStorage.setItem('categories', JSON.stringify(defaultCategories));
-
-        localStorage.setItem('totalBudget', '1200000');
-
-        const sampleCategoryBudgets = {
-            "식비": 500000,
-            "교통비": 150000,
-            "쇼핑": 250000
-        };
-        localStorage.setItem('categoryBudgets', JSON.stringify(sampleCategoryBudgets));
-    }
-
-
-    function loadBudgets() {
-        const totalBudget = parseInt(localStorage.getItem('totalBudget') || '0');
-        document.getElementById('totalBudget').textContent = totalBudget.toLocaleString();
-
-        const usedAmounts = {
-            "식비": 325000,
-            "교통비": 112000,
-            "쇼핑": 180000
-        };
         const totalUsed = Object.values(usedAmounts).reduce((sum, val) => sum + val, 0);
 
         const remainingBudget = totalBudget - totalUsed;
