@@ -94,10 +94,10 @@ public class CalendarRepository {
     }
 
     private final RowMapper<CategoryAll> categoryAllRowMapper = (rs, rowNum) -> new CategoryAll(
-            rs.getLong("categoryId"),
-            rs.getLong("userId"),
-            rs.getString("categoryName"),
-            rs.getString("categoryImg")
+            rs.getLong("category_id"),
+            rs.getLong("user_id"),
+            rs.getString("category_name"),
+            rs.getString("category_img")
     );
 
     public List<CategoryAll> findCategory(long userId) {
@@ -107,7 +107,7 @@ public class CalendarRepository {
                 WHERE user_id = ?
                 """;
 
-        return jdbcTemplate.query(sql, categoryAllRowMapper);
+        return jdbcTemplate.query(sql, categoryAllRowMapper, userId);
     }
 
 }

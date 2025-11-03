@@ -12,7 +12,7 @@ import java.util.List;
 public class BudgetService {
 
     private final BudgetRepository budgetRepository;
-    private final CanlendarRepository calendarRepository;
+//    private final CanlendarRepository calendarRepository;
 
     public BudgetService(BudgetRepository budgetRepository) {this.budgetRepository = budgetRepository ;}
 
