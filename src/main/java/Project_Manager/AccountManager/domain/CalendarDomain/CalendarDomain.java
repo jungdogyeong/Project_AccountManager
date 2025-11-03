@@ -1,14 +1,17 @@
 package Project_Manager.AccountManager.domain.CalendarDomain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@NoArgsConstructor
 public class CalendarDomain {
     private long calendar_id;
     private long user_id;
     private long category_id;
+    private String category_name;
     private long amount;
     private String entry_type;
     private String memo;

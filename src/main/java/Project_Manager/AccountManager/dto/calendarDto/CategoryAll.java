@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Transaction {
+public class CategoryAll {
+    private long categoryId;
+    private long userId;
     private String categoryName;
-    private long amount;
-    private String memo;
-    private String type;
+    private String categoryImg;
 }
