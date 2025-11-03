@@ -3,7 +3,7 @@
 <body>
 
 <div class="nav-bar" th:fragment="navFragment">
-    <a class="nav-item active" th:href="@{/calendar/calendar}">
+    <a class="nav-item active" th:href="@{/calendar/calendar(user_id=${user_id})}">
         <i class="fa-solid fa-calendar-days"></i>
         <span>Calendar</span>
     </a>

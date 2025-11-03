@@ -35,6 +35,7 @@ public class BudgetController {
             return "/budget/budget";
         }
 
+
         // 총 예산 설정 페이지 처리
         @GetMapping("/budgetTotal")
         public String budgetTotalForm(Model model, @RequestParam("user_id") Long user_id){
