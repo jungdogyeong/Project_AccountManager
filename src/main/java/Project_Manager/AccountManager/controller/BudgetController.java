@@ -26,7 +26,7 @@ public class BudgetController {
         public String budgetHome(Model model, @RequestParam("user_id") Long user_id){
             LocalDate today = LocalDate.now();
 
-            List<BudgetDomain> totalBudgetList = budgetService.findTotalAmount(user_id,
+            List<BudgetDomain> totalBudgetList = budgetService.findAllBudgetsForMonth(user_id,
                     LocalDate.of(today.getYear(), today.getMonth(), 1));
 
             model.addAttribute("user_id", user_id);
@@ -41,7 +41,7 @@ public class BudgetController {
         public String budgetTotalForm(Model model, @RequestParam("user_id") Long user_id){
 
             LocalDate firstDayOfMonth = LocalDate.now().withDayOfMonth(1);
-            List<BudgetDomain> totalBudgets = budgetService.findTotalAmount(user_id,
+            List<BudgetDomain> totalBudgets = budgetService.findAllBudgetsForMonth(user_id,
                     firstDayOfMonth);
 
             if(!totalBudgets.isEmpty())

@@ -1,29 +1,33 @@
 package Project_Manager.AccountManager.service;
 
 import Project_Manager.AccountManager.domain.BudgetDomain;
+import Project_Manager.AccountManager.domain.BudgetStatusDto;
+import Project_Manager.AccountManager.dto.calendarDto.CategoryAll;
 import Project_Manager.AccountManager.repository.BudgetRepository;
 import Project_Manager.AccountManager.repository.CalendarRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.time.temporal.TemporalAdjuster; // 월의 마지막 날 계산
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.stream.Collector;
 
 @Service
 public class BudgetService {
 
     private final BudgetRepository budgetRepository;
-    private final CanlendarRepository calendarRepository;
+    private final CalendarRepository calendarRepository;
 
-    public BudgetService(BudgetRepository budgetRepository) {this.budgetRepository = budgetRepository ;}
-
-    // 총 예산 조회
-    public List<BudgetDomain> findTotalAmount(Long user_id, LocalDate budget_date) {
-        return budgetRepository.findAllBudgets(user_id, budget_date);
+    public BudgetService(BudgetRepository budgetRepository, CalendarRepository calendarRepository) {
+        this.budgetRepository = budgetRepository ;
+        this.calendarRepository = calendarRepository;
     }
 
-    // 카테고리별 예산 조회
-    public List<BudgetDomain> findCategoryAmount(Long user_id, Long category_id, LocalDate budget_date) {
-        return budgetRepository.findAllBudgets(user_id, category_id, budget_date);
+    // 모든 목록 조회
+    public List<BudgetDomain> findAllBudgetsForMonth(Long user_id, LocalDate budget_date) {
+        return budgetRepository.findAllBudgets(user_id, budget_date);
     }
 
     // 총 예산 등록 및 수정
@@ -72,5 +76,9 @@ public class BudgetService {
             budgetToupdate.setExpected_amount(budget.getExpected_amount());
             budgetRepository.update(budgetToupdate);
         }
+    }
+
+    public BudgetDomain getTotalBudget(Long userId, LocalDate date) {
+
     }
 }

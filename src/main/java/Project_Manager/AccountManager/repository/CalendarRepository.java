@@ -11,6 +11,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.Map;
+import java.util.HashMap;
+
 @Repository
 public class CalendarRepository {
     private final JdbcTemplate jdbcTemplate;
@@ -110,4 +113,25 @@ public class CalendarRepository {
         return jdbcTemplate.query(sql, categoryAllRowMapper);
     }
 
+    // 해당 월의 카테고리별 지출 내역을 Map으로 조회
+    public Map<Long, Long> findSpendingByCategoriesForMonth(Long userId, int year, int month) {
+        String sql = """
+                SELECT category_id, SUM(amount) as total_spent
+                FROM calendars
+                WHERE user_id = ?
+                    AND entry_type = 'EXPENSE'
+                    AND YEAR(calendar_date) = ?
+                    AND MONTH(calendar_date) = ?
+                GROUP BY category_id
+                """;
+
+        // 카테고리별 지출 내역 Map으로 저장
+        Map<Long, Long> spendingMap = new HashMap<>();
+        jdbcTemplate.query(sql, (rs, rowNum) -> {
+            spendingMap.put(rs.getLong("category_id"), rs.getLong("total_spent"));
+            return null;
+        }, userId, year, month);
+
+        return spendingMap;
+    }
 }
