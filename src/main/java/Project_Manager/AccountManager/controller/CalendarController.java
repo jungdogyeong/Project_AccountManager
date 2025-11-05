@@ -36,6 +36,7 @@ public class CalendarController {
         CalendarView calendarView = calendarService.createCalendarView(user_id, currentYear, currentMonth);
 
         model.addAttribute("view", calendarView);
+        model.addAttribute("user_id", user_id);
 
         return "/calendar/calendar";
     }
